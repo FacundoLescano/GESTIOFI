@@ -1,0 +1,14 @@
+web/migrations/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+media/
+sales_software/.env/
+sales_software/__pycache__/
+sales_software/__init__.py
+.env
+authe/migrations/
+authe/__pycache__/
+web/__pycache__/
+web/__init__.py
