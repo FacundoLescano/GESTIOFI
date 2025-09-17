@@ -78,7 +78,7 @@ WSGI_APPLICATION = "sales_software.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
+"""DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv("NAME"),  # Nombre de la base de datos
@@ -87,14 +87,14 @@ DATABASES = {
         'HOST': os.getenv("HOST"),  # La dirección del servidor de la base de datos
         'PORT': os.getenv("PORT"),  # El puerto de la base de datos, por defecto es 3306
     }
-}
+}"""
 
-"""DATABASES = {
+DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
     }
-}"""
+}
 
 
 # Password validation

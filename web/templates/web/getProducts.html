@@ -1,67 +1,333 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Sistema de Ventas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary-black: #000000;
+            --primary-white: #ffffff;
+            --secondary-gray: #f8f9fa;
+            --accent-gray: #6c757d;
+            --border-gray: #dee2e6;
+        }
+        
+        body {
+            background-color: var(--primary-white);
+            color: var(--primary-black);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            background-color: var(--primary-black) !important;
+            border-bottom: 1px solid var(--border-gray);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            color: var(--primary-white) !important;
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+        
+        .navbar-toggler {
+            border-color: var(--primary-white);
+        }
+        
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+        
+        .dropdown-menu {
+            background-color: var(--primary-white);
+            border: 1px solid var(--border-gray);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .dropdown-item {
+            color: var(--primary-black);
+            transition: background-color 0.2s ease;
+        }
+        
+        .dropdown-item:hover {
+            background-color: var(--secondary-gray);
+            color: var(--primary-black);
+        }
+        
+        .btn-logout {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: var(--primary-white);
+        }
+        
+        .btn-logout:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+            color: var(--primary-white);
+        }
+        
+        .table-container {
+            background-color: var(--primary-white);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+        
+        .table-header {
+            background-color: var(--primary-black);
+            color: var(--primary-white);
+            padding: 1rem;
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+        
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .table thead th {
+            background-color: var(--secondary-gray);
+            border-bottom: 2px solid var(--primary-black);
+            color: var(--primary-black);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+        
+        .table tbody tr:hover {
+            background-color: var(--secondary-gray);
+        }
+        
+        .table tbody td {
+            border-color: var(--border-gray);
+            vertical-align: middle;
+        }
+        
+        .btn-outline-danger {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+        
+        .btn-outline-danger:hover {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: var(--primary-white);
+        }
+        
+        .btn-outline-primary {
+            border-color: var(--primary-black);
+            color: var(--primary-black);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary-black);
+            border-color: var(--primary-black);
+            color: var(--primary-white);
+        }
+        
+        .main-container {
+            padding: 2rem 0;
+        }
+        
+        .section-title {
+            color: var(--primary-black);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+        
+        .table-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .table-responsive {
+            flex: 1;
+            overflow-y: auto;
+            max-height: 70vh;
+        }
+        
+        @media (max-width: 991.98px) {
+            .col-lg-6 {
+                margin-bottom: 2rem;
+            }
+            
+            .table-responsive {
+                max-height: 50vh;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+
+<nav class="navbar navbar-expand-lg navbar-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar</a>
+    <a class="navbar-brand" href="{% url 'home' %}">
+      <i class="fas fa-chart-line me-2"></i>Sistema de Ventas
+    </a>
+    
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+    
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Features</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Pricing</a>
-        </li>
-        <li class="nav-item">
-            <div class="btn-group">
-            <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                Danger
-            </button>
-            </div>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-user me-1"></i>Mi Cuenta
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="{% url 'my_account' %}">
+              <i class="fas fa-user-circle me-2"></i>Perfil
+            </a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <form action="{% url 'logout' %}" method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="dropdown-item btn-logout w-100 text-start border-0">
+                  <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                </button>
+              </form>
+            </li>
+          </ul>
         </li>
       </ul>
     </div>
   </div>
 </nav>
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-        <th scope="col">#</th>
-        <th scope="col">PRODUCTO</th>
-        <th scope="col">PRECIO</th>
-        <th scope="col">CATEGORÍA</th>
-        <th scope="col">STOCK</th>
-        <th scope="col">EMPRESA</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for i in Products %}
-    <tr>
-      <th scope="row">1</th>
-      <td>{{ i.name }}</td>
-      <td>{{ i.price }}</td>
-      <td>{{ i.category }}</td>
-      <td>{{ i.stock }}</td>
-      <td>{{ i.empresa }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+
+<div class="container-fluid main-container">
+  <div class="container-fluid">
+    <div class="row g-4">
+      
+
+      <div class="col-lg-6">
+        <div class="table-container">
+      <h3 class="table-header">
+        <i class="fas fa-box me-2"></i>Productos
+      </h3>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Producto</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Categoría</th>
+              <th scope="col">Stock</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for i in Products %}
+            <tr>
+              <th scope="row" class="fw-bold">{{ i.id }}</th>
+              <td class="fw-medium">{{ i.name }}</td>
+              <td class="text-success fw-bold">${{ i.price }}</td>
+              <td><span class="badge bg-light text-dark">{{ i.category }}</span></td>
+              <td>
+                <span class="badge {% if i.stock > 10 %}bg-success{% elif i.stock > 0 %}bg-warning{% else %}bg-danger{% endif %}">
+                  {{ i.stock }}
+                </span>
+              </td>
+              <td>
+                <form action="{% url 'delete_product' i.id %}" method="post" class="d-inline">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-outline-danger btn-sm">
+                    <i class="fas fa-trash me-1"></i>Eliminar
+                  </button>
+                </form>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="6" class="text-center text-muted py-4">
+                <i class="fas fa-box-open fa-2x mb-2 d-block"></i>
+                No hay productos registrados
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+      </div>
+
+   
+      <div class="col-lg-6">
+        <div class="table-container">
+      <h3 class="table-header">
+        <i class="fas fa-shopping-cart me-2"></i>Ventas
+      </h3>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Cliente</th>
+              <th scope="col">Fecha</th>
+              <th scope="col">Total</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for a in Sales %}
+            <tr>
+              <th scope="row" class="fw-bold">{{ a.id_venta }}</th>
+              <td class="fw-medium">{{ a.name }}</td>
+              <td class="text-muted">{{ a.date|date:"d/m/Y" }}</td>
+              <td class="text-success fw-bold">${{ a.total }}</td>
+              <td>
+                <div class="btn-group-vertical btn-group-sm" role="group">
+                  <form action="{% url 'generate_report' %}" method="post" class="d-inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="sale_id" value="{{ a.id_venta }}">
+                    <button type="submit" class="btn btn-outline-primary btn-sm mb-1">
+                      <i class="fas fa-file-pdf me-1"></i>Ticket
+                    </button>
+                  </form>
+                  <form action="{% url 'delete_sale' a.id_venta %}" method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                      <i class="fas fa-trash me-1"></i>Eliminar
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="5" class="text-center text-muted py-4">
+                <i class="fas fa-shopping-cart fa-2x mb-2 d-block"></i>
+                No hay ventas registradas
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
 </body>
 </html>

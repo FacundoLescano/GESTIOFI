@@ -12,3 +12,4 @@ authe/migrations/
 authe/__pycache__/
 web/__pycache__/
 web/__init__.py
+manage.py/
