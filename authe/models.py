@@ -7,6 +7,9 @@ class Company(AbstractUser, PermissionsMixin):
     username = models.CharField(max_length=100, unique=True)    
     email = models.EmailField()
     password = models.CharField(max_length=100)
+    cuit = models.CharField(max_length=20, null=True)
+    city = models.CharField(max_length=50, null=True)
+    state = models.BooleanField(default=True)
     last_login = models.DateTimeField(auto_now=True)
 
     def __str__(self):

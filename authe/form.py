@@ -1,4 +1,6 @@
+from typing import Required
 from django import forms
+from django.forms import widgets
 from .models import Company
 from web.models import Sale
 from web.models import Product
@@ -23,9 +25,21 @@ class CompanyCreationForm(forms.ModelForm):
             attrs={'class': 'formcontrollocura'}
         )
     )
+    cuit = forms.CharField(
+        max_length=20,
+        widget=forms.TextInput(
+            attrs={'class': 'formcontrollocura'}
+        )
+    )
+    city = forms.CharField(
+        max_length=50,
+        widget=forms.TextInput(
+            attrs={'class': 'formcontrollocura'}
+        )
+    )
     class Meta:
         model = Company
-        fields = ['username', 'email', 'password']
+        fields = ['username', 'email', 'password', 'cuit', 'city']
 
 
 class SaleForm(forms.ModelForm):

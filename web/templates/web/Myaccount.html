@@ -1,14 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Mi cuenta</title>
+    <style>
+        * { box-sizing: border-box; }
+        html, body { height: 100%; }
+        body {
+            margin: 0;
+            background: #000;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .center {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .bubble {
+            background: #fff;
+            color: #000;
+            border-radius: 16px;
+            padding: 32px;
+            width: min(520px, 100%);
+            box-shadow: 0 28px 90px rgba(0, 0, 0, 0.9);
+        }
+        .bubble h1 {
+            margin: 0 0 16px 0;
+            font-size: 24px;
+            letter-spacing: .5px;
+        }
+        .row { 
+            display: flex; 
+            gap: 12px; 
+            padding: 12px 0; 
+            border-top: 1px solid #000; 
+        }
+        .row:first-of-type { border-top: 0; }
+        .label { width: 96px; font-weight: 600; }
+        .value { flex: 1; }
+    </style>
 </head>
 <body>
-
-    <h1>Mi cuenta</h1>
-    <p>Nombre: {{ user.username }}</p>
-    <p>Email: {{ user.email }}</p>
+    <div class="center">
+        {% for i in user %}
+        <section class="bubble" role="region" aria-label="Datos de la cuenta">
+            <h1>Mi cuenta</h1>
+            <div class="row">
+                <div class="label">Usuario</div>
+                <div class="value">{{ i.username }}</div>
+            </div>
+            <div class="row">
+                <div class="label">Email</div>
+                <div class="value">{{ i.email }}</div>
+            </div>
+        </section>
+        {% endfor %}
+    </div>
 </body>
 </html>

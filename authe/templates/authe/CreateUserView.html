@@ -76,9 +76,9 @@
         
         .form-container {
             background-color: var(--primary-white);
-            border: 2px solid var(--primary-black);
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 28px 90px rgba(0,0,0,0.9);
             padding: 3rem;
             width: 100%;
             max-width: 600px;
@@ -232,8 +232,8 @@
       <!-- Formulario -->
       <div class="form-container">
         <div class="form-header">
-          <h1 class="form-title">Crear Usuario</h1>
-          <p class="form-subtitle">Registre un nuevo usuario en el sistema</p>
+          <h1 class="form-title">Crear Negocio</h1>
+          <p class="form-subtitle">Registre un nuevo negocio en el sistema</p>
         </div>
 
     <form enctype="multipart/form-data" method="post">
@@ -241,7 +241,7 @@
           
           <div class="form-group">
             <label for="{{ form.username.id_for_label }}" class="form-label">
-              Nombre de Usuario
+              Nombre de Negocio
             </label>
             <input type="text" name="username" class="formcontrollocura" placeholder="Ingresa tu nombre de usuario" required id="id_username">
           </div>
@@ -252,6 +252,20 @@
             </label>
             <input type="email" name="email" class="formcontrollocura" placeholder="Ingresa tu correo electrónico" required id="id_email">
           </div>
+
+          <div class="form-group">
+            <label for="{{ form.cuit.id_for_label }}" class="form-label">
+              CUIT (NO REQUERIDO)
+            </label>
+            <input type="text" name="cuit" class="formcontrollocura" placeholder="Ingresa tu CUIT" required id="id_cuit">
+          </div>
+
+          <div class="form-group">
+            <label for="{{ form.city.id_for_label }}" class="form-label">
+              CIUDAD
+            </label>
+            <input type="text" name="city" class="formcontrollocura" placeholder="Ingresa tu ciudad" required id="id_city">
+          </div>
           
           <div class="form-group">
             <label for="{{ form.password.id_for_label }}" class="form-label">
@@ -261,7 +275,7 @@
           </div>
           
           <button type="submit" class="btn-submit">
-            Crear Usuario
+            Crear Negocio
           </button>
     </form>
       </div>
