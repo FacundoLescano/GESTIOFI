@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Ventas - Gestión Empresarial</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary-black: #000000;
+            --primary-white: #ffffff;
+            --secondary-gray: #f5f5f7;
+            --accent-gray: #86868b;
+            --border-gray: #d2d2d7;
+            --blue-accent: #0071e3;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--primary-black);
+            background-color: var(--primary-white);
+            overflow-x: hidden;
+        }
+        
+        /* Navigation */
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-brand {
+            color: var(--primary-white) !important;
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+        
+        .nav-link {
+            color: var(--primary-white) !important;
+            font-weight: 400;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--accent-gray) !important;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(135deg, var(--secondary-gray) 0%, var(--primary-white) 100%);
+            padding: 120px 20px 80px;
+        }
+        
+        .hero-content h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .hero-content p {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: var(--accent-gray);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-button {
+            background-color: var(--blue-accent);
+            color: var(--primary-white);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 980px;
+            font-size: 1.1rem;
+            font-weight: 400;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+        
+        .cta-button:hover {
+            background-color: #0077ed;
+            transform: translateY(-2px);
+            color: var(--primary-white);
+            text-decoration: none;
+        }
+        
+        .cta-button.secondary {
+            background-color: transparent;
+            color: var(--primary-black);
+            border: 1px solid var(--primary-black);
+        }
+        
+        .cta-button.secondary:hover {
+            background-color: var(--primary-black);
+            color: var(--primary-white);
+        }
+        
+        /* Features Section */
+        .features-section {
+            padding: 100px 20px;
+            background-color: var(--primary-white);
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 600;
+            margin-bottom: 3rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background-color: var(--secondary-gray);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 2rem;
+            color: var(--primary-black);
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card p {
+            color: var(--accent-gray);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        /* Product Showcase */
+        .showcase-section {
+            padding: 100px 20px;
+            background-color: var(--secondary-gray);
+        }
+        
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .showcase-card {
+            background-color: var(--primary-white);
+            border-radius: 18px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .showcase-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .showcase-card h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .showcase-card p {
+            color: var(--accent-gray);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .showcase-card .cta-button {
+            margin: 0;
+        }
+        
+        /* Dashboard Section */
+        .dashboard-section {
+            padding: 100px 20px;
+            background-color: var(--secondary-gray);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .dashboard-bubble {
+            background-color: var(--primary-white);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dashboard-bubble::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 113, 227, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .dashboard-bubble:hover::before {
+            opacity: 1;
+        }
+        
+        .dashboard-bubble:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+        }
+        
+        .dashboard-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--blue-accent) 0%, #0077ed 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 1.8rem;
+            color: var(--primary-white);
+            transition: transform 0.3s ease;
+        }
+        
+        .dashboard-bubble:hover .dashboard-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .dashboard-bubble h3 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary-black);
+        }
+        
+        .dashboard-bubble p {
+            color: var(--accent-gray);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        
+        .dashboard-metric {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--blue-accent);
+            margin: 15px 0 10px;
+        }
+        
+        /* Background Images */
+        .dashboard-bg-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80%;
+            object-fit: cover;
+            opacity: 0.05;
+            z-index: 1;
+            border-radius: 20px;
+        }
+        
+        .dashboard-bg-image.left {
+            left: 10%;
+            transform: translateY(-50%);
+        }
+        
+        .dashboard-bg-image.right {
+            right: 10%;
+            left: auto;
+            transform: translateY(-50%);
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(60px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-60px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(60px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .animate-on-scroll {
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        
+        .animate-on-scroll.delay-1 {
+            animation-delay: 0.2s;
+        }
+        
+        .animate-on-scroll.delay-2 {
+            animation-delay: 0.4s;
+        }
+        
+        .animate-on-scroll.delay-3 {
+            animation-delay: 0.6s;
+        }
+        
+        .animate-on-scroll.delay-4 {
+            animation-delay: 0.8s;
+        }
+        
+        .animate-on-scroll.delay-5 {
+            animation-delay: 1s;
+        }
+        
+        /* Footer */
+        .footer-section {
+            padding: 60px 20px 40px;
+            background-color: var(--primary-black);
+            color: var(--primary-white);
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .footer-content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-content p {
+            color: var(--accent-gray);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 100px 20px 60px;
+            }
+            
+            .features-section,
+            .showcase-section,
+            .dashboard-section {
+                padding: 60px 20px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .showcase-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .cta-button {
+                display: block;
+                margin: 10px auto;
+                max-width: 200px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-content p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <i class="fas fa-chart-line me-2"></i>GESTIOFI
+    </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#features">Características</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#showcase">Productos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#dashboard">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'login' %}">Iniciar Sesión</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="hero-content">
+    <h1>Gestiona tu negocio<br>de forma inteligente</h1>
+    <p>La solución completa para administrar ventas, productos y clientes. Simplifica tu operación diaria con herramientas profesionales.</p>
+    <div>
+      <a href="{% url 'create_user' %}" class="cta-button">Comenzar Ahora</a>
+      <a href="#features" class="cta-button secondary">Conocer Más</a>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section" id="features">
+  <div class="container">
+    <h2 class="section-title animate-on-scroll">Todo lo que necesitas para vender</h2>
+    <div class="features-grid">
+      <div class="feature-card animate-on-scroll delay-1">
+        <div class="feature-icon">
+          <i class="fas fa-shopping-cart"></i>
+        </div>
+        <h3>Gestión de Ventas</h3>
+        <p>Registra y administra todas tus ventas de manera eficiente. Calcula totales automáticamente y mantén un historial completo.</p>
+      </div>
+      
+      <div class="feature-card animate-on-scroll delay-2">
+        <div class="feature-icon">
+          <i class="fas fa-boxes"><img src="/web/templates/static/images/fondo1.png" alt=""></i>
+        </div>
+        <h3>Control de Inventario</h3>
+        <p>Mantén un control preciso de tu stock. Agrega productos, categoriza por tipo y monitorea la disponibilidad en tiempo real.</p>
+      </div>
+      
+      <div class="feature-card animate-on-scroll delay-3">
+        <div class="feature-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <h3>Administración de Clientes</h3>
+        <p>Organiza tu base de clientes, registra información de contacto y mantén un seguimiento detallado de cada relación comercial.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Product Showcase -->
+<section class="showcase-section" id="showcase">
+  <div class="container">
+    <h2 class="section-title animate-on-scroll">Herramientas profesionales</h2>
+    <div class="showcase-grid">
+      <div class="showcase-card animate-on-scroll delay-1">
+        <h3>Panel de Ventas</h3>
+        <p>Interfaz intuitiva para crear y gestionar ventas. Selecciona múltiples productos, calcula totales automáticamente y registra información del cliente.</p>
+        <a href="{% url 'create_sale' %}" class="cta-button">Crear Venta</a>
+      </div>
+      
+      <div class="showcase-card animate-on-scroll delay-2">
+        <h3>Catálogo de Productos</h3>
+        <p>Administra tu inventario completo. Agrega nuevos productos con precios, descripciones, categorías y control de stock integrado.</p>
+        <a href="{% url 'create_product' %}" class="cta-button">Agregar Producto</a>
+      </div>
+      
+      <div class="showcase-card animate-on-scroll delay-3">
+        <h3>Mi Cuenta</h3>
+        <p>Gestiona tu perfil empresarial, configura tus datos de contacto y mantén un control total sobre tu cuenta del sistema.</p>
+        <a href="{% url 'my_account' %}" class="cta-button">Ver Perfil</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Dashboard Section -->
+<section class="dashboard-section" id="dashboard">
+  <div class="container">
+    <!-- Background Images -->
+    <img src="/web/templates/static/fondo1.png" alt="Dashboard Analytics" class="dashboard-bg-image left">
+    <img src="/static/images/dashboard-bg-2.jpg" alt="Sales Charts" class="dashboard-bg-image right">
+    
+    <h2 class="section-title animate-on-scroll">Dashboard de Estadísticas</h2>
+    <div class="dashboard-grid">
+      <div class="dashboard-bubble animate-on-scroll delay-1">
+        <div class="dashboard-icon">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <h3>Ventas Mensuales</h3>
+        <div class="dashboard-metric">$45,230</div>
+        <p>Ingresos generados este mes con un crecimiento del 12% respecto al mes anterior.</p>
+      </div>
+      
+      <div class="dashboard-bubble animate-on-scroll delay-2">
+        <div class="dashboard-icon">
+          <i class="fas fa-star"></i>
+        </div>
+        <h3>Productos Top</h3>
+        <div class="dashboard-metric">Laptop Pro</div>
+        <p>El producto más vendido con 156 unidades este mes y excelentes reseñas de clientes.</p>
+      </div>
+      
+      <div class="dashboard-bubble animate-on-scroll delay-3">
+        <div class="dashboard-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <h3>Clientes Activos</h3>
+        <div class="dashboard-metric">2,847</div>
+        <p>Base de clientes en crecimiento constante con 89% de satisfacción promedio.</p>
+      </div>
+      
+      <div class="dashboard-bubble animate-on-scroll delay-4">
+        <div class="dashboard-icon">
+          <i class="fas fa-boxes"></i>
+        </div>
+        <h3>Inventario Total</h3>
+        <div class="dashboard-metric">1,234</div>
+        <p>Productos disponibles en stock con rotación eficiente y control automático.</p>
+      </div>
+      
+      <div class="dashboard-bubble animate-on-scroll delay-5">
+        <div class="dashboard-icon">
+          <i class="fas fa-percentage"></i>
+        </div>
+        <h3>Margen Promedio</h3>
+        <div class="dashboard-metric">34.5%</div>
+        <p>Rentabilidad optimizada con análisis de costos y precios competitivos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<section class="footer-section">
+  <div class="footer-content">
+    <h3>¿Listo para transformar tu negocio?</h3>
+    <p>Únete a miles de empresas que ya confían en nuestro sistema para gestionar sus ventas de manera eficiente.</p>
+    <a href="{% url 'create_user' %}" class="cta-button">Empezar Gratis</a>
+  </div>
+</section>
+
+<!-- Font Awesome para iconos -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+<!-- Smooth Scrolling -->
+<script>
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+
+// Navbar background on scroll
+window.addEventListener('scroll', function() {
+    const navbar = document.querySelector('.navbar');
+    if (window.scrollY > 50) {
+        navbar.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
+    } else {
+        navbar.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+    }
+});
+
+// Scroll animations
+function animateOnScroll() {
+    const elements = document.querySelectorAll('.animate-on-scroll');
+    
+    elements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+        
+        if (elementTop < window.innerHeight - elementVisible) {
+            element.style.opacity = '1';
+            element.style.animationPlayState = 'running';
+        }
+    });
+}
+
+// Initial check and scroll listener
+document.addEventListener('DOMContentLoaded', function() {
+    animateOnScroll();
+    window.addEventListener('scroll', animateOnScroll);
+});
+
+// Parallax effect for background images
+window.addEventListener('scroll', function() {
+    const scrolled = window.pageYOffset;
+    const parallaxImages = document.querySelectorAll('.dashboard-bg-image');
+    
+    parallaxImages.forEach(image => {
+        const speed = 0.5;
+        image.style.transform = `translate(-50%, ${-50 + scrolled * speed}px)`;
+    });
+});
+</script>
+
+</body>
+</html>

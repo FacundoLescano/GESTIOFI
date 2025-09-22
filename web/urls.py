@@ -1,7 +1,8 @@
 from django.urls import path
-from web.views import getproductsView, CreateSaleView, CreateProductView, DeleteProductView, MyaccountView, GeneratePDFView, DeleteSaleView, TotalSaleDayView
+from web.views import getproductsView, CreateSaleView, CreateProductView, DeleteProductView, MyaccountView, GeneratePDFView, DeleteSaleView, TotalSaleDayView, PageWelcome
 
 urlpatterns = [
+    path("welcome/", PageWelcome.as_view(), name="welcome"),
     path("home/", getproductsView.as_view(), name="home"),
     path("create_sale/", CreateSaleView.as_view(), name="create_sale"),
     path("create_product/", CreateProductView.as_view(), name="create_product"),

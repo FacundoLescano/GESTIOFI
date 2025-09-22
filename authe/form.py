@@ -2,8 +2,8 @@ from typing import Required
 from django import forms
 from django.forms import widgets
 from .models import Company
-from web.models import Sale
-from web.models import Product
+from web.models import Sale, Product, SaleProduct
+from django.forms import inlineformset_factory
 
 class CompanyCreationForm(forms.ModelForm):
     username = forms.CharField(
@@ -40,19 +40,6 @@ class CompanyCreationForm(forms.ModelForm):
     class Meta:
         model = Company
         fields = ['username', 'email', 'password', 'cuit', 'city']
-
-
-class SaleForm(forms.ModelForm):
-    name = forms.CharField(max_length=100, required=True)
-    products = forms.ModelMultipleChoiceField(
-        queryset=Product.objects.all(), 
-        required=True,
-        label="Select Products")
-    enterprise = forms.ModelChoiceField(queryset=Company.objects.all(), required=True)
-    total = forms.DecimalField(max_digits=10, decimal_places=2)
-    class Meta:
-        model = Sale
-        fields = ['name', 'products', 'enterprise', 'total']
         
 
 class ProductForm(forms.ModelForm):
@@ -65,3 +52,15 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['name', 'price', 'stock', 'description', 'category', 'empresa']
+
+
+class SaleForm(forms.ModelForm):
+    name = forms.CharField(max_length=100, required=True)
+    date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}), required=True)
+    total = forms.DecimalField(max_digits=10, decimal_places=2, required=False, initial=0.00)
+    enterprise = forms.ModelChoiceField(queryset=Company.objects.all(), required=True)
+    class Meta:
+        model = Sale
+        fields = ['name', 'total', 'enterprise']
+
+SaleProductFormSet = inlineformset_factory(Sale, SaleProduct, fields=('product', 'quantity'), extra=1, can_delete=True)

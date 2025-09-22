@@ -1,8 +1,8 @@
-from .models import Sale, Product
+from .models import Sale, Product, SaleProduct
 from authe.models import Company
 from django.views.generic import ListView, CreateView, TemplateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from authe.form import SaleForm, ProductForm
+from authe.form import SaleForm, ProductForm, SaleProductFormSet
 from django.urls import reverse_lazy
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, A4
@@ -13,6 +13,11 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
 from django.http import HttpResponse
 from datetime import datetime
+from django.forms import inlineformset_factory
+
+class PageWelcome(TemplateView):
+    template_name = "web/PageWelcome.html"
+    
 
 class getproductsView(LoginRequiredMixin, TemplateView):
     template_name = "web/getProducts.html"
@@ -32,19 +37,42 @@ class CreateSaleView(LoginRequiredMixin, CreateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        form.fields['products'].queryset = Product.objects.filter(empresa=self.request.user)
         form.fields['enterprise'].queryset = form.fields['enterprise'].queryset.filter(id=self.request.user.id)
         return form
-
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['formset'] = SaleProductFormSet(self.request.POST)
+        else:
+            context['formset'] = SaleProductFormSet()
+        return context
+    
     def form_valid(self, form):
-        response = super().form_valid(form)
-        products = form.cleaned_data['products']
-        for product in products:
-            product.stock -= 1
-            product.save()
-        return response
-
-
+        context = self.get_context_data()
+        formset = context['formset']
+        if formset.is_valid():
+            self.object = form.save(commit=False)
+            self.object.enterprise = self.request.user
+            self.object.save()
+            formset.instance = self.object
+            formset.save()
+            
+            # Calcular el total de la venta
+            total_venta = 0
+            for sale_product in formset:
+                product = sale_product.cleaned_data.get('product')
+                quantity = sale_product.cleaned_data.get('quantity')
+                if product and quantity:
+                    total_venta += product.price * quantity
+            
+            # Actualizar el total de la venta
+            self.object.total = total_venta
+            self.object.save()
+            
+            return super().form_valid(form)
+        else:
+            return self.form_invalid(form)
 
 class CreateProductView(LoginRequiredMixin, CreateView):
     model = Product

@@ -183,6 +183,66 @@
             display: none;
         }
         
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .products-table th {
+            background-color: var(--primary-black);
+            color: var(--primary-white);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .products-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-gray);
+            background-color: var(--primary-white);
+        }
+        
+        .products-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .products-table select {
+            width: 100%;
+            border: 2px solid var(--border-gray);
+            border-radius: 6px;
+            padding: 0.5rem;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .products-table select:focus {
+            border-color: var(--primary-black);
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(0,0,0,0.1);
+        }
+        
+        .products-section {
+            margin-bottom: 2rem;
+        }
+        
+        .products-section h4 {
+            color: var(--primary-black);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .products-section p {
+            color: var(--accent-gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
         @media (max-width: 768px) {
             .form-container {
                 padding: 2rem 1.5rem;
@@ -243,8 +303,23 @@
 <div class="container-fluid" style="margin-top: 80px;">
   <div class="row justify-content-center">
     <div class="col-12 col-md-10 col-lg-8 col-xl-6">
-      
-      <!-- Formulario en burbuja -->
+
+      <form method="post" enctype="multipart/form-data" class="form-container">
+        {% csrf_token %}
+
+        {{  form.as_p }}
+
+        <h2> Crear Nueva Venta </h2>
+
+        {{ formset.management_form }}
+        {% for form in formset %}
+          {{ form }}
+        {% endfor %}
+
+        <button type="submit" class="btn-submit">
+          <i class="fas fa-check me-2">Crear Venta</i></button>
+        </form>
+<!--
       <div class="form-container">
         <div class="form-header">
           <h1 class="form-title">
@@ -260,37 +335,72 @@
             <label for="{{ form.name.id_for_label }}" class="form-label">
               <i class="fas fa-user me-2"></i>Nombre del Cliente
             </label>
-            {{ form.name }}
+            <input type="text" name="name">
           </div>
           
-          <div class="form-group">
-            <label for="{{ form.products.id_for_label }}" class="form-label">
-              <i class="fas fa-box me-2"></i>Productos
-            </label>
-            {{ form.products }}
+          <div class="products-section">
+            <h4>
+              <i class="fas fa-box me-2"></i>Seleccionar Productos
+            </h4>
+            <p>Selecciona hasta 5 productos para la venta. Puedes elegir el mismo producto múltiples veces.</p>
+            
+            <table class="products-table">
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <select name="products" class="form-select">
+                      <option value="{{ form.products }}">Selecciona un producto</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <select name="products" class="form-select">
+                      <option value="{{ form.products }}">Selecciona un producto</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <select name="products" class="form-select">
+                      <option value="{{ form.products }}">Selecciona un producto</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <select name="products" class="form-select">
+                      <option value="{{ form.products }}">Selecciona un producto</option>
+                    </select>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
           
           <div class="form-group">
             <label for="{{ form.total.id_for_label }}" class="form-label">
               <i class="fas fa-dollar-sign me-2"></i>Total de la Venta
             </label>
-            {{ form.total }}
+            <input type="number" name="total" class="form-control" placeholder="0.00" step="0.01" min="0" required>
           </div>
-          
-          <!-- Campo oculto para la empresa -->
-          <div class="hidden-field">
-            {{ form.enterprise }}
-          </div>
+           {{ form.enterprise }}
           
           <button type="submit" class="btn-submit">
             <i class="fas fa-check me-2">Crear Venta</ii>
           </button>
         </form>
-      </div>
+      </div> -->
       
     </div>
   </div>
 </div>
+
 
 <!-- Font Awesome para iconos -->
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
