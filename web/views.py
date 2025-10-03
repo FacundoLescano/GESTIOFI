@@ -2,7 +2,7 @@ from .models import Sale, Product, SaleProduct
 from authe.models import Company
 from django.views.generic import ListView, CreateView, TemplateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from authe.form import SaleForm, ProductForm, SaleProductFormSet
+from authe.form import SaleForm, ProductForm
 from django.urls import reverse_lazy
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, A4
@@ -13,7 +13,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
 from django.http import HttpResponse
 from datetime import datetime
-from django.forms import inlineformset_factory
+from authe.form import SaleProductFormSet
 
 class PageWelcome(TemplateView):
     template_name = "web/PageWelcome.html"
@@ -32,47 +32,68 @@ class getproductsView(LoginRequiredMixin, TemplateView):
 class CreateSaleView(LoginRequiredMixin, CreateView):
     model = Sale
     form_class = SaleForm
-    template_name = "web/CreateSaleView.html"
+    template_name = "web/CreateSaleView2.html"
     success_url = reverse_lazy("home")
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        form.fields['enterprise'].queryset = form.fields['enterprise'].queryset.filter(id=self.request.user.id)
+        # Permitir seleccionar cualquier empresa disponible
+        # form.fields['enterprise'].queryset = form.fields['enterprise'].queryset.filter(id=self.request.user.id)
         return form
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.POST:
             context['formset'] = SaleProductFormSet(self.request.POST)
         else:
-            context['formset'] = SaleProductFormSet()
+            # Crear formset vacío para que el usuario pueda agregar productos dinámicamente
+            context['formset'] = SaleProductFormSet(queryset=SaleProduct.objects.none())
+        
+        # Agregar productos disponibles para el template
+        context['products'] = Product.objects.filter(empresa=self.request.user)
         return context
-    
+
     def form_valid(self, form):
         context = self.get_context_data()
         formset = context['formset']
         if formset.is_valid():
+            has_products = False
+            for sale_product in formset:
+                if sale_product.cleaned_data:
+                    product = sale_product.cleaned_data.get('product')
+                    quantity = sale_product.cleaned_data.get('quantity')
+                    if product is not None and quantity is not None and quantity > 0:
+                        has_products = True
+                        break
+            if not has_products:
+                form.add_error(None, "Debe seleccionar al menos un producto para la venta.")
+                return self.form_invalid(form)
             self.object = form.save(commit=False)
-            self.object.enterprise = self.request.user
+            total_venta = 0
+            for sale_product in formset:
+                if sale_product.cleaned_data:
+                    product = sale_product.cleaned_data.get('product')
+                    quantity = sale_product.cleaned_data.get('quantity')
+                    if product is not None and quantity is not None and quantity > 0:
+                        # Validar stock disponible
+                        if product.stock < quantity:
+                            form.add_error(None, f"No hay suficiente stock para {product.name}. Stock disponible: {product.stock}, solicitado: {quantity}")
+                            return self.form_invalid(form)
+                        subtotal = float(product.price) * int(quantity)
+                        total_venta += subtotal
+                        product.stock -= quantity
+                        product.save()
+            # Asignar el total calculado
+            self.object.total = total_venta
             self.object.save()
             formset.instance = self.object
             formset.save()
-            
-            # Calcular el total de la venta
-            total_venta = 0
-            for sale_product in formset:
-                product = sale_product.cleaned_data.get('product')
-                quantity = sale_product.cleaned_data.get('quantity')
-                if product and quantity:
-                    total_venta += product.price * quantity
-            
-            # Actualizar el total de la venta
-            self.object.total = total_venta
-            self.object.save()
-            
             return super().form_valid(form)
         else:
             return self.form_invalid(form)
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
 
 class CreateProductView(LoginRequiredMixin, CreateView):
     model = Product
@@ -189,18 +210,20 @@ class GeneratePDFView(LoginRequiredMixin, TemplateView):
         
         total_venta = 0
         for product in sale.products.all():
-            # Asumiendo cantidad 1 por producto (puedes modificar esto según tu lógica)
-            cantidad = 1
-            subtotal = float(product.price) * cantidad
-            total_venta += subtotal
-            
-            table_data.append([
-                product.name,
-                product.category,
-                f"${product.price}",
-                str(cantidad),
-                f"${subtotal:.2f}"
-            ])
+            # Verificar que el producto existe y tiene precio
+            if product and product.price is not None:
+                # Asumiendo cantidad 1 por producto (puedes modificar esto según tu lógica)
+                cantidad = 1
+                subtotal = float(product.price) * cantidad
+                total_venta += subtotal
+                
+                table_data.append([
+                    product.name,
+                    product.category,
+                    f"${product.price}",
+                    str(cantidad),
+                    f"${subtotal:.2f}"
+                ])
         
         # Crear la tabla
         table = Table(table_data, colWidths=[2*inch, 1.5*inch, 1*inch, 0.8*inch, 1*inch])

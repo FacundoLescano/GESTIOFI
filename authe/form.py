@@ -55,12 +55,65 @@ class ProductForm(forms.ModelForm):
 
 
 class SaleForm(forms.ModelForm):
-    name = forms.CharField(max_length=100, required=True)
-    date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}), required=True)
-    total = forms.DecimalField(max_digits=10, decimal_places=2, required=False, initial=0.00)
-    enterprise = forms.ModelChoiceField(queryset=Company.objects.all(), required=True)
+    name = forms.CharField(
+        max_length=100, 
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'sale-name-input',
+            'placeholder': 'Nombre'
+        })
+    )
+    enterprise = forms.ModelChoiceField(
+        queryset=Company.objects.all(), 
+        required=True,
+        widget=forms.Select(attrs={
+            'class': 'sale-enterprise-select',
+            'placeholder': 'Empresa'
+        })
+    )
+    total = forms.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        required=False, 
+        initial=0.00,
+        widget=forms.NumberInput(attrs={
+            'class': 'sale-total-input',
+            'readonly': True
+        })
+    )
+    
     class Meta:
         model = Sale
-        fields = ['name', 'total', 'enterprise']
+        fields = ['name', 'enterprise', 'total'] 
 
-SaleProductFormSet = inlineformset_factory(Sale, SaleProduct, fields=('product', 'quantity'), extra=1, can_delete=True)
+class SaleProductForm(forms.ModelForm):
+    product = forms.ModelChoiceField(
+        queryset=Product.objects.all(),
+        required=True,
+        widget=forms.Select(attrs={
+            'class': 'sale-product-select',
+            'placeholder': 'Seleccionar producto'
+        })
+    )
+    quantity = forms.IntegerField(
+        required=True,
+        min_value=1,
+        widget=forms.NumberInput(attrs={
+            'class': 'sale-quantity-input',
+            'placeholder': 'Cantidad',
+            'min': '1'
+        })
+    )
+    
+    class Meta:
+        model = SaleProduct
+        fields = ['product', 'quantity']
+        
+SaleProductFormSet= inlineformset_factory(
+    Sale, 
+    SaleProduct,
+    form=SaleProductForm,
+    fields=('product', 'quantity'), 
+    extra=5, 
+    max_num=None, 
+    can_delete=False)

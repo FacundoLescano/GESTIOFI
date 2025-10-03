@@ -3,33 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Ventas - Gestión Empresarial</title>
+    <title>GESTIOFI - Sistema de Gestión Empresarial</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --primary-black: #000000;
             --primary-white: #ffffff;
-            --secondary-gray: #f5f5f7;
-            --accent-gray: #86868b;
+            --light-gray: #f5f5f7;
+            --medium-gray: #86868b;
+            --dark-gray: #1d1d1f;
             --border-gray: #d2d2d7;
-            --blue-accent: #0071e3;
+            --blue-accent: #007aff;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.47059;
             color: var(--primary-black);
             background-color: var(--primary-white);
             overflow-x: hidden;
+            font-weight: 400;
         }
-        
+
         /* Navigation */
         .navbar {
             background-color: rgba(0, 0, 0, 0.8);
@@ -41,24 +44,29 @@
             right: 0;
             z-index: 1000;
             transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         .navbar-brand {
             color: var(--primary-white) !important;
             font-weight: 600;
-            font-size: 1.5rem;
+            font-size: 1.375rem;
+            letter-spacing: -0.022em;
         }
-        
+
         .nav-link {
             color: var(--primary-white) !important;
             font-weight: 400;
+            font-size: 0.875rem;
+            letter-spacing: -0.022em;
             transition: color 0.3s ease;
+            padding: 0.5rem 1rem !important;
         }
-        
+
         .nav-link:hover {
-            color: var(--accent-gray) !important;
+            color: var(--medium-gray) !important;
         }
-        
+
         /* Hero Section */
         .hero-section {
             min-height: 100vh;
@@ -66,72 +74,119 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            background: linear-gradient(135deg, var(--secondary-gray) 0%, var(--primary-white) 100%);
+            background: var(--primary-black);
+            background-image: url('/web/templates/static/images/fondo1.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             padding: 120px 20px 80px;
+            position: relative;
         }
-        
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            height: 100vh;
+            margin: 0 auto;
+            padding: 0 20px;
+            padding-top: 8vh;
+        }
+
         .hero-content h1 {
-            font-size: clamp(3rem, 8vw, 6rem);
+            font-size: clamp(2.5rem, 6vw, 5rem);
             font-weight: 600;
             margin-bottom: 1rem;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.022em;
+            color: var(--primary-white);
+            line-height: 1.1;
+            text-align: center;
+            white-space: nowrap;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
         
         .hero-content p {
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
-            color: var(--accent-gray);
-            margin-bottom: 2rem;
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            color: var(--medium-gray);
+            margin-bottom: 3rem;
+            font-weight: 400;
+            line-height: 1.4;
+            letter-spacing: 0.004em;
+            text-align: center;
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
         }
-        
+
         .cta-button {
             background-color: var(--blue-accent);
             color: var(--primary-white);
             border: none;
-            padding: 12px 24px;
+            padding: 14px 28px;
             border-radius: 980px;
-            font-size: 1.1rem;
-            font-weight: 400;
+            font-size: 1.125rem;
+            font-weight: 500;
             text-decoration: none;
             display: inline-block;
             transition: all 0.3s ease;
-            margin: 0 10px;
+            margin: 0 12px;
+            letter-spacing: -0.022em;
+            line-height: 1.47059;
+            box-shadow: 0 4px 14px rgba(0, 122, 255, 0.3);
         }
-        
+
         .cta-button:hover {
             background-color: #0077ed;
             transform: translateY(-2px);
             color: var(--primary-white);
             text-decoration: none;
+            box-shadow: 0 6px 20px rgba(0, 122, 255, 0.4);
         }
         
         .cta-button.secondary {
             background-color: transparent;
-            color: var(--primary-black);
-            border: 1px solid var(--primary-black);
+            color: var(--primary-white);
+            border: 2px solid var(--primary-white);
+            box-shadow: 0 4px 14px rgba(255, 255, 255, 0.1);
         }
         
         .cta-button.secondary:hover {
-            background-color: var(--primary-black);
-            color: var(--primary-white);
+            background-color: var(--primary-white);
+            color: var(--primary-black);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
         }
-        
+
         /* Features Section */
         .features-section {
-            padding: 100px 20px;
+            padding: 120px 20px;
             background-color: var(--primary-white);
         }
-        
+
         .section-title {
             text-align: center;
             font-size: clamp(2.5rem, 6vw, 4rem);
             font-weight: 600;
-            margin-bottom: 3rem;
-            letter-spacing: -0.02em;
+            margin-bottom: 4rem;
+            letter-spacing: -0.022em;
+            color: var(--primary-black);
+            line-height: 1.07143;
         }
-        
+
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -139,43 +194,53 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-        
+
         .feature-card {
             text-align: center;
-            padding: 40px 20px;
+            padding: 50px 20px;
         }
-        
+
         .feature-icon {
-            width: 80px;
-            height: 80px;
-            background-color: var(--secondary-gray);
+            width: 90px;
+            height: 90px;
+            background-color: var(--light-gray);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 30px;
-            font-size: 2rem;
+            margin: 0 auto 35px;
+            font-size: 2.25rem;
             color: var(--primary-black);
+            transition: transform 0.3s ease;
         }
-        
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.05);
+        }
+
         .feature-card h3 {
-            font-size: 1.5rem;
+            font-size: 1.625rem;
             font-weight: 600;
             margin-bottom: 1rem;
+            color: var(--primary-black);
+            letter-spacing: -0.022em;
+            line-height: 1.125;
         }
-        
+
         .feature-card p {
-            color: var(--accent-gray);
-            font-size: 1.1rem;
-            line-height: 1.6;
+            color: var(--medium-gray);
+            font-size: 1.125rem;
+            line-height: 1.47059;
+            letter-spacing: 0.004em;
+            font-weight: 400;
         }
-        
-        /* Product Showcase */
+
+        /* Showcase Section */
         .showcase-section {
-            padding: 100px 20px;
-            background-color: var(--secondary-gray);
+            padding: 120px 20px;
+            background-color: var(--light-gray);
         }
-        
+
         .showcase-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -183,7 +248,7 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-        
+
         .showcase-card {
             background-color: var(--primary-white);
             border-radius: 18px;
@@ -192,35 +257,42 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
         }
-        
+
         .showcase-card:hover {
             transform: translateY(-10px);
         }
-        
+
         .showcase-card h3 {
             font-size: 1.8rem;
             font-weight: 600;
             margin-bottom: 1rem;
+            color: var(--primary-black);
+            letter-spacing: -0.022em;
         }
-        
+
         .showcase-card p {
-            color: var(--accent-gray);
+            color: var(--medium-gray);
             font-size: 1.1rem;
             margin-bottom: 2rem;
+            line-height: 1.47059;
         }
-        
+
         .showcase-card .cta-button {
             margin: 0;
         }
-        
+
         /* Dashboard Section */
         .dashboard-section {
-            padding: 100px 20px;
-            background-color: var(--secondary-gray);
+            padding: 120px 20px;
+            background-color: var(--primary-black);
             position: relative;
             overflow: hidden;
         }
-        
+
+        .dashboard-section .section-title {
+            color: var(--primary-white);
+        }
+
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -230,39 +302,24 @@
             position: relative;
             z-index: 2;
         }
-        
+
         .dashboard-bubble {
-            background-color: var(--primary-white);
-            border-radius: 20px;
-            padding: 40px 30px;
+            background-color: var(--dark-gray);
+            border-radius: 18px;
+            padding: 45px 35px;
             text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
-        .dashboard-bubble::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(0, 113, 227, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .dashboard-bubble:hover::before {
-            opacity: 1;
-        }
-        
+
         .dashboard-bubble:hover {
             transform: translateY(-15px) scale(1.02);
             box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
         }
-        
+
         .dashboard-icon {
             width: 70px;
             height: 70px;
@@ -276,56 +333,66 @@
             color: var(--primary-white);
             transition: transform 0.3s ease;
         }
-        
+
         .dashboard-bubble:hover .dashboard-icon {
             transform: scale(1.1) rotate(5deg);
         }
-        
+
         .dashboard-bubble h3 {
-            font-size: 1.6rem;
+            font-size: 1.625rem;
             font-weight: 600;
             margin-bottom: 15px;
-            color: var(--primary-black);
+            color: var(--primary-white);
+            letter-spacing: -0.022em;
+            line-height: 1.125;
         }
-        
+
         .dashboard-bubble p {
-            color: var(--accent-gray);
-            font-size: 1rem;
-            line-height: 1.6;
+            color: var(--medium-gray);
+            font-size: 1.0625rem;
+            line-height: 1.47059;
+            letter-spacing: 0.004em;
+            font-weight: 400;
         }
-        
+
         .dashboard-metric {
-            font-size: 2.2rem;
+            font-size: 2.25rem;
             font-weight: 700;
             color: var(--blue-accent);
             margin: 15px 0 10px;
+            letter-spacing: -0.022em;
         }
-        
-        /* Background Images */
-        .dashboard-bg-image {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            height: 80%;
-            object-fit: cover;
-            opacity: 0.05;
-            z-index: 1;
-            border-radius: 20px;
+
+        /* Footer */
+        .footer-section {
+            padding: 80px 20px 60px;
+            background-color: var(--primary-black);
+            color: var(--primary-white);
+            text-align: center;
         }
-        
-        .dashboard-bg-image.left {
-            left: 10%;
-            transform: translateY(-50%);
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
         }
-        
-        .dashboard-bg-image.right {
-            right: 10%;
-            left: auto;
-            transform: translateY(-50%);
+
+        .footer-content h3 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            letter-spacing: -0.022em;
+            line-height: 1.14286;
         }
-        
+
+        .footer-content p {
+            color: var(--medium-gray);
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
+            line-height: 1.47059;
+            letter-spacing: 0.004em;
+            font-weight: 400;
+        }
+
         /* Animations */
         @keyframes fadeInUp {
             from {
@@ -337,90 +404,32 @@
                 transform: translateY(0);
             }
         }
-        
-        @keyframes fadeInScale {
-            from {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-60px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(60px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
+
         .animate-on-scroll {
             opacity: 0;
             animation: fadeInUp 0.8s ease forwards;
         }
-        
+
         .animate-on-scroll.delay-1 {
             animation-delay: 0.2s;
         }
-        
+
         .animate-on-scroll.delay-2 {
             animation-delay: 0.4s;
         }
-        
+
         .animate-on-scroll.delay-3 {
             animation-delay: 0.6s;
         }
-        
+
         .animate-on-scroll.delay-4 {
             animation-delay: 0.8s;
         }
-        
+
         .animate-on-scroll.delay-5 {
             animation-delay: 1s;
         }
-        
-        /* Footer */
-        .footer-section {
-            padding: 60px 20px 40px;
-            background-color: var(--primary-black);
-            color: var(--primary-white);
-            text-align: center;
-        }
-        
-        .footer-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .footer-content h3 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-        
-        .footer-content p {
-            color: var(--accent-gray);
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-        }
-        
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .hero-section {
@@ -454,12 +463,8 @@
                 max-width: 200px;
             }
         }
-        
+
         @media (max-width: 480px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-            
             .hero-content h1 {
                 font-size: 2.5rem;
             }
@@ -486,13 +491,13 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-          <a class="nav-link" href="#features">Características</a>
+          <a class="nav-link" href="#features">Funcionalidades</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#showcase">Productos</a>
+          <a class="nav-link" href="#showcase">Herramientas</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#dashboard">Dashboard</a>
+          <a class="nav-link" href="#dashboard">Estadísticas</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'login' %}">Iniciar Sesión</a>
@@ -506,7 +511,7 @@
 <section class="hero-section">
   <div class="hero-content">
     <h1>Gestiona tu negocio<br>de forma inteligente</h1>
-    <p>La solución completa para administrar ventas, productos y clientes. Simplifica tu operación diaria con herramientas profesionales.</p>
+    <p>La solución completa para administrar ventas, productos y clientes. Simplifica tu operación diaria con herramientas profesionales diseñadas para el éxito empresarial.</p>
     <div>
       <a href="{% url 'create_user' %}" class="cta-button">Comenzar Ahora</a>
       <a href="#features" class="cta-button secondary">Conocer Más</a>
@@ -524,12 +529,12 @@
           <i class="fas fa-shopping-cart"></i>
         </div>
         <h3>Gestión de Ventas</h3>
-        <p>Registra y administra todas tus ventas de manera eficiente. Calcula totales automáticamente y mantén un historial completo.</p>
+        <p>Registra y administra todas tus ventas de manera eficiente. Calcula totales automáticamente y mantén un historial completo de transacciones.</p>
       </div>
       
       <div class="feature-card animate-on-scroll delay-2">
         <div class="feature-icon">
-          <i class="fas fa-boxes"><img src="/web/templates/static/images/fondo1.png" alt=""></i>
+          <i class="fas fa-boxes"></i>
         </div>
         <h3>Control de Inventario</h3>
         <p>Mantén un control preciso de tu stock. Agrega productos, categoriza por tipo y monitorea la disponibilidad en tiempo real.</p>
@@ -546,7 +551,7 @@
   </div>
 </section>
 
-<!-- Product Showcase -->
+<!-- Showcase Section -->
 <section class="showcase-section" id="showcase">
   <div class="container">
     <h2 class="section-title animate-on-scroll">Herramientas profesionales</h2>
@@ -575,11 +580,7 @@
 <!-- Dashboard Section -->
 <section class="dashboard-section" id="dashboard">
   <div class="container">
-    <!-- Background Images -->
-    <img src="/web/templates/static/fondo1.png" alt="Dashboard Analytics" class="dashboard-bg-image left">
-    <img src="/static/images/dashboard-bg-2.jpg" alt="Sales Charts" class="dashboard-bg-image right">
-    
-    <h2 class="section-title animate-on-scroll">Dashboard de Estadísticas</h2>
+    <h2 class="section-title animate-on-scroll">Estadísticas de tu negocio</h2>
     <div class="dashboard-grid">
       <div class="dashboard-bubble animate-on-scroll delay-1">
         <div class="dashboard-icon">
@@ -633,15 +634,12 @@
 <section class="footer-section">
   <div class="footer-content">
     <h3>¿Listo para transformar tu negocio?</h3>
-    <p>Únete a miles de empresas que ya confían en nuestro sistema para gestionar sus ventas de manera eficiente.</p>
+    <p>Únete a miles de empresas que ya confían en nuestro sistema para gestionar sus ventas de manera eficiente y profesional.</p>
     <a href="{% url 'create_user' %}" class="cta-button">Empezar Gratis</a>
   </div>
 </section>
 
-<!-- Font Awesome para iconos -->
-<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-
-<!-- Smooth Scrolling -->
+<!-- JavaScript -->
 <script>
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -685,17 +683,6 @@ function animateOnScroll() {
 document.addEventListener('DOMContentLoaded', function() {
     animateOnScroll();
     window.addEventListener('scroll', animateOnScroll);
-});
-
-// Parallax effect for background images
-window.addEventListener('scroll', function() {
-    const scrolled = window.pageYOffset;
-    const parallaxImages = document.querySelectorAll('.dashboard-bg-image');
-    
-    parallaxImages.forEach(image => {
-        const speed = 0.5;
-        image.style.transform = `translate(-50%, ${-50 + scrolled * speed}px)`;
-    });
 });
 </script>
 

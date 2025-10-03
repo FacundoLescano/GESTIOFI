@@ -10,7 +10,7 @@ class Product(models.Model):
     empresa = models.ForeignKey(Company, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return f"{self.price}"
 
 class Sale(models.Model):
     id_venta = models.AutoField(primary_key=True)
@@ -28,4 +28,5 @@ class SaleProduct(models.Model):
     quantity = models.IntegerField()
 
     def __str__(self):
-        return f"{self.quantity} of {self.product.name} in sale {self.sale.id_venta}"
+        #return f"{self.quantity} of {self.product.name} in sale {self.sale.id_venta}"
+        return f"{self.name} - ${self.price}"

@@ -3,33 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Venta - Sistema de Ventas</title>
+    <title>Crear Venta - GESTIOFI</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --primary-black: #000000;
             --primary-white: #ffffff;
-            --secondary-gray: #f8f9fa;
-            --accent-gray: #6c757d;
+            --light-gray: #f8f9fa;
+            --medium-gray: #6c757d;
             --border-gray: #dee2e6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         body {
-            background-color: var(--secondary-gray);
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
             color: var(--primary-black);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem 1rem;
+            background-color: var(--light-gray);
+            font-weight: 400;
+            padding-top: 60px;
         }
-        
+
+        /* Navigation */
         .navbar {
-            background-color: var(--primary-black) !important;
+            background-color: var(--primary-black);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
             border-bottom: 1px solid var(--border-gray);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
         .navbar-brand {
@@ -37,249 +47,289 @@
             font-weight: 600;
             font-size: 1.5rem;
         }
-        
-        .navbar-toggler {
-            border-color: var(--primary-white);
+
+        .nav-link {
+            color: var(--primary-white) !important;
+            font-weight: 400;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
         }
-        
-        .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+
+        .nav-link:hover {
+            color: var(--medium-gray) !important;
         }
-        
-        .dropdown-menu {
-            background-color: var(--primary-white);
-            border: 1px solid var(--border-gray);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+
+        /* Main Container */
+        .main-container {
+            min-height: calc(100vh - 60px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            background-color: var(--light-gray);
         }
-        
-        .dropdown-item {
-            color: var(--primary-black);
-            transition: background-color 0.2s ease;
-        }
-        
-        .dropdown-item:hover {
-            background-color: var(--secondary-gray);
-            color: var(--primary-black);
-        }
-        
-        .btn-logout {
-            background-color: #dc3545;
-            border-color: #dc3545;
-            color: var(--primary-white);
-        }
-        
-        .btn-logout:hover {
-            background-color: #c82333;
-            border-color: #bd2130;
-            color: var(--primary-white);
-        }
-        
+
+        /* Form Container */
         .form-container {
             background-color: var(--primary-white);
-            border: none;
             border-radius: 16px;
-            box-shadow: 0 28px 90px rgba(0,0,0,0.9);
-            padding: 3rem;
-            width: 100%;
+            padding: 40px;
+            box-shadow: 0 12px 50px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-gray);
             max-width: 600px;
-            margin: 2rem auto;
+            width: 100%;
         }
-        
+
+        /* Form Header */
         .form-header {
             text-align: center;
-            margin-bottom: 2.5rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 2px solid var(--border-gray);
+            margin-bottom: 40px;
         }
         
         .form-title {
-            color: var(--primary-black);
-            font-weight: 700;
             font-size: 2rem;
-            margin-bottom: 0.5rem;
+            font-weight: 700;
+            margin-bottom: 0;
+            color: var(--primary-black);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        
-        .form-subtitle {
-            color: var(--accent-gray);
-            font-size: 1rem;
-            margin: 0;
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 20px;
         }
         
         .form-label {
             color: var(--primary-black);
             font-weight: 600;
-            font-size: 1rem;
-            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
             display: block;
         }
         
         .form-control, .form-select {
-            border: 2px solid var(--border-gray);
-            border-radius: 10px;
-            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-gray);
+            border-radius: 6px;
+            padding: 12px 16px;
             font-size: 1rem;
             transition: all 0.3s ease;
             background-color: var(--primary-white);
             color: var(--primary-black);
+            width: 100%;
         }
-        
+
         .form-control:focus, .form-select:focus {
             border-color: var(--primary-black);
-            box-shadow: 0 0 0 0.2rem rgba(0,0,0,0.1);
-            background-color: var(--primary-white);
-            color: var(--primary-black);
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+            outline: none;
         }
         
         .form-control::placeholder {
-            color: var(--accent-gray);
+            color: var(--medium-gray);
         }
-        
+
+        /* Widget-specific styles */
+        .sale-name-input {
+            border: 1px solid var(--border-gray);
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            background-color: var(--primary-white);
+            color: var(--primary-black);
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .sale-name-input:focus {
+            border-color: var(--primary-black);
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+            outline: none;
+        }
+
+        .sale-enterprise-select {
+            border: 1px solid var(--border-gray);
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            background-color: var(--primary-white);
+            color: var(--primary-black);
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .sale-enterprise-select:focus {
+            border-color: var(--primary-black);
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+            outline: none;
+        }
+
+        .sale-product-select {
+            border: 1px solid var(--border-gray);
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            background-color: var(--primary-white);
+            color: var(--primary-black);
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .sale-product-select:focus {
+            border-color: var(--primary-black);
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+            outline: none;
+        }
+
+        .sale-quantity-input {
+            border: 1px solid var(--border-gray);
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            background-color: var(--primary-white);
+            color: var(--primary-black);
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .sale-quantity-input:focus {
+            border-color: var(--primary-black);
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+            outline: none;
+        }
+
+        /* Products Section */
+        .products-section {
+            margin: 30px 0;
+        }
+
+        /* Product Form */
+        .product-form {
+            margin-bottom: 15px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 0;
+            margin-bottom: 15px;
+        }
+
+        .form-col {
+            flex: 1;
+        }
+
+        .form-col-2 {
+            flex: 2;
+        }
+
+        .form-col-1 {
+            flex: 1;
+        }
+
+        /* Product inputs should have same total width as other inputs */
+        .product-form .form-row {
+            display: flex;
+            gap: 0;
+        }
+
+        .product-form .form-col-2 {
+            flex: 2;
+        }
+
+        .product-form .form-col-1 {
+            flex: 1;
+        }
+
+
+        /* Buttons */
+
+
+        /* Submit Button */
         .btn-submit {
             background-color: var(--primary-black);
-            border: 2px solid var(--primary-black);
+            border: none;
             color: var(--primary-white);
-            padding: 0.875rem 2rem;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 1.5rem;
-        }
-        
-        .btn-submit:hover {
-            background-color: var(--primary-white);
-            color: var(--primary-black);
-            border-color: var(--primary-black);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        
-        .btn-back {
-            background-color: transparent;
-            border: 2px solid var(--primary-black);
-            color: var(--primary-black);
-            padding: 0.75rem 1.5rem;
-            border-radius: 10px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-        
-        .btn-back:hover {
-            background-color: var(--primary-black);
-            color: var(--primary-white);
-            text-decoration: none;
-        }
-        
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .hidden-field {
-            display: none;
-        }
-        
-        .products-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .products-table th {
-            background-color: var(--primary-black);
-            color: var(--primary-white);
-            padding: 1rem;
-            text-align: left;
+            padding: 16px 32px;
+            border-radius: 6px;
             font-weight: 600;
             font-size: 1rem;
-        }
-        
-        .products-table td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border-gray);
-            background-color: var(--primary-white);
-        }
-        
-        .products-table tr:last-child td {
-            border-bottom: none;
-        }
-        
-        .products-table select {
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
             width: 100%;
-            border: 2px solid var(--border-gray);
-            border-radius: 6px;
-            padding: 0.5rem;
-            font-size: 0.95rem;
-            transition: border-color 0.3s ease;
+            margin-top: 30px;
+            cursor: pointer;
+            height: 48px;
         }
-        
-        .products-table select:focus {
-            border-color: var(--primary-black);
-            outline: none;
-            box-shadow: 0 0 0 0.2rem rgba(0,0,0,0.1);
+
+        .btn-submit:hover {
+            background-color: #333;
         }
-        
-        .products-section {
-            margin-bottom: 2rem;
+
+        /* Total Section */
+        .total-section {
+            margin: 20px 0;
+            text-align: center;
         }
-        
-        .products-section h4 {
-            color: var(--primary-black);
+
+        .total-label {
+            font-size: 1.2rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
+            color: var(--primary-black);
         }
-        
-        .products-section p {
-            color: var(--accent-gray);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
+
+        /* Error Messages */
+        .alert {
+            border-radius: 8px;
+            border: none;
+            padding: 20px;
+            margin-bottom: 30px;
         }
-        
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
             .form-container {
-                padding: 2rem 1.5rem;
-                margin: 1rem;
-                border-radius: 15px;
+                padding: 30px 20px;
+                margin: 20px 10px;
             }
             
             .form-title {
-                font-size: 1.5rem;
+                font-size: 1.8rem;
             }
             
-            body {
-                padding: 1rem 0.5rem;
+            .form-row {
+                flex-direction: column;
+                gap: 15px;
             }
         }
     </style>
 </head>
 <body>
 
-<!-- Navegación -->
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark">
   <div class="container-fluid">
     <a class="navbar-brand" href="{% url 'home' %}">
-      <i class="fas fa-chart-line me-2"></i>Sistema de Ventas
+      <i class="fas fa-chart-line me-2"></i>GESTIOFI
     </a>
     
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
     
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
             <i class="fas fa-user me-1"></i>Mi Cuenta
           </a>
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+          <ul class="dropdown-menu dropdown-menu-end">
             <li><a class="dropdown-item" href="{% url 'my_account' %}">
               <i class="fas fa-user-circle me-2"></i>Perfil
             </a></li>
@@ -287,7 +337,7 @@
             <li>
               <form action="{% url 'logout' %}" method="post" class="d-inline">
                 {% csrf_token %}
-                <button type="submit" class="dropdown-item btn-logout w-100 text-start border-0">
+                <button type="submit" class="dropdown-item w-100 text-start border-0" style="background: none; border: none; color: #dc3545;">
                   <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
                 </button>
               </form>
@@ -297,113 +347,124 @@
       </ul>
     </div>
   </div>
-</nav>
+  </nav>
 
-<!-- Contenido Principal -->
-<div class="container-fluid" style="margin-top: 80px;">
-  <div class="row justify-content-center">
-    <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+<!-- Main Container -->
+<div class="main-container">
+  <div class="form-container">
+    <form method="post" enctype="multipart/form-data" id="saleForm">
+      {% csrf_token %}
 
-      <form method="post" enctype="multipart/form-data" class="form-container">
-        {% csrf_token %}
+      <!-- Form Header -->
+      <div class="form-header">
+        <h1 class="form-title">NUEVA VENTA</h1>
+      </div>
 
-        {{  form.as_p }}
+      <!-- Error Messages -->
+      {% if form.errors or formset.errors %}
+      <div class="alert alert-danger" role="alert">
+        <h5><i class="fas fa-exclamation-triangle me-2"></i>Errores encontrados:</h5>
+        <ul class="mb-0">
+          {% for field, errors in form.errors.items %}
+            {% for error in errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          {% endfor %}
+          {% for form in formset %}
+            {% for field, errors in form.errors.items %}
+              {% for error in errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
 
-        <h2> Crear Nueva Venta </h2>
-
-        {{ formset.management_form }}
-        {% for form in formset %}
-          {{ form }}
-        {% endfor %}
-
-        <button type="submit" class="btn-submit">
-          <i class="fas fa-check me-2">Crear Venta</i></button>
-        </form>
-<!--
-      <div class="form-container">
-        <div class="form-header">
-          <h1 class="form-title">
-            <i class="fas fa-shopping-cart me-3"></i>Crear Nueva Venta
-          </h1>
-          <p class="form-subtitle">Complete los datos para registrar una nueva venta</p>
+      <!-- Customer Information -->
+      <div class="form-row">
+        <div class="form-col">
+          <label class="form-label">Nombre</label>
+          {{ form.name }}
         </div>
-        
-        <form method="post" enctype="multipart/form-data">
-          {% csrf_token %}
-          
-          <div class="form-group">
-            <label for="{{ form.name.id_for_label }}" class="form-label">
-              <i class="fas fa-user me-2"></i>Nombre del Cliente
-            </label>
-            <input type="text" name="name">
+        <div class="form-col">
+          <label class="form-label">Empresa</label>
+          {{ form.enterprise }}
+        </div>
+      </div>
+
+      <!-- Products Section -->
+      <div class="products-section">
+        <div id="productsContainer">
+          {{ formset.management_form }}
+          {% for sale_product_form in formset %}
+          <div class="product-form" id="product-form-{{ forloop.counter0 }}">
+            <div class="form-row product-row">
+              <div class="form-col form-col-2">
+                {{ sale_product_form.product }}
+              </div>
+              <div class="form-col form-col-1">
+                {{ sale_product_form.quantity }}
+              </div>
+            </div>
           </div>
-          
-          <div class="products-section">
-            <h4>
-              <i class="fas fa-box me-2"></i>Seleccionar Productos
-            </h4>
-            <p>Selecciona hasta 5 productos para la venta. Puedes elegir el mismo producto múltiples veces.</p>
-            
-            <table class="products-table">
-              <thead>
-                <tr>
-                  <th>Producto</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <select name="products" class="form-select">
-                      <option value="{{ form.products }}">Selecciona un producto</option>
-                    </select>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <select name="products" class="form-select">
-                      <option value="{{ form.products }}">Selecciona un producto</option>
-                    </select>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <select name="products" class="form-select">
-                      <option value="{{ form.products }}">Selecciona un producto</option>
-                    </select>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <select name="products" class="form-select">
-                      <option value="{{ form.products }}">Selecciona un producto</option>
-                    </select>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          
-          <div class="form-group">
-            <label for="{{ form.total.id_for_label }}" class="form-label">
-              <i class="fas fa-dollar-sign me-2"></i>Total de la Venta
-            </label>
-            <input type="number" name="total" class="form-control" placeholder="0.00" step="0.01" min="0" required>
-          </div>
-           {{ form.enterprise }}
-          
-          <button type="submit" class="btn-submit">
-            <i class="fas fa-check me-2">Crear Venta</ii>
-          </button>
-        </form>
-      </div> -->
-      
-    </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Total Section -->
+      <div class="total-section">
+        <div class="total-label">TOTAL: <span id="totalAmount">$0.00</span></div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn-submit">
+        CREAR VENTA
+      </button>
+    </form>
   </div>
 </div>
 
+<!-- JavaScript -->
+<script>
+// Function to update total
+function updateTotal() {
+    const productForms = document.querySelectorAll('.product-form');
+    let total = 0;
+    
+    productForms.forEach(form => {
+        const select = form.querySelector('.sale-product-select');
+        const quantityInput = form.querySelector('.sale-quantity-input');
+        
+        if (select && quantityInput) {
+            const selectedOption = select.options[select.selectedIndex];
+            const price = selectedOption ? parseFloat(selectedOption.getAttribute('data-price')) || 0 : 0;
+            const quantity = parseInt(quantityInput.value) || 0;
+            total += price * quantity;
+        }
+    });
+    
+    document.getElementById('totalAmount').textContent = `$${total.toFixed(2)}`;
+}
 
-<!-- Font Awesome para iconos -->
-<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    // Add event listeners to product selects and quantity inputs
+    const productSelects = document.querySelectorAll('.sale-product-select');
+    const quantityInputs = document.querySelectorAll('.sale-quantity-input');
+    
+    productSelects.forEach(select => {
+        select.addEventListener('change', updateTotal);
+    });
+    
+    quantityInputs.forEach(input => {
+        input.addEventListener('change', updateTotal);
+        input.addEventListener('input', updateTotal);
+    });
+    
+    updateTotal();
+});
+</script>
 
-</body>
+  </body>
 </html>

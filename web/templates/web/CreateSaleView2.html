@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear Venta - GESTIOFI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-black: #000000;
+      --primary-white: #ffffff;
+      --light-gray: #f8f9fa;
+      --medium-gray: #6c757d;
+      --border-gray: #dee2e6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: var(--primary-black);
+      background-color: var(--light-gray);
+      font-weight: 400;
+      padding-top: 100px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px 20px 20px;
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="sparkle" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="%23e0e0e0" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23sparkle)"/></svg>');
+    }
+
+    /* Navigation */
+    .navbar {
+      background-color: var(--primary-black);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      border-bottom: 1px solid var(--border-gray);
+    }
+    
+    .navbar-brand {
+      color: var(--primary-white) !important;
+      font-weight: 600;
+      font-size: 1.5rem;
+    }
+
+    .nav-link {
+      color: var(--primary-white) !important;
+      font-weight: 400;
+      font-size: 0.9rem;
+      transition: color 0.3s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--medium-gray) !important;
+    }
+
+    .sale-container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      margin-top: 70px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
+      position: relative;
+    }
+
+    .sale-title {
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 30px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .customer-info {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .input-group {
+      flex: 1;
+    }
+
+    /* Estilos para los inputs del backend */
+    .sale-name-input,
+    .sale-enterprise-select {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      background-color: white;
+      transition: border-color 0.3s ease;
+      outline: none;
+    }
+
+    .sale-name-input:focus,
+    .sale-enterprise-select:focus {
+      border-color: #333;
+    }
+
+    .sale-name-input::placeholder {
+      color: #999;
+    }
+
+    .products-section {
+      margin-bottom: 30px;
+    }
+
+    .product-row {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      margin-bottom: 15px;
+      padding: 15px;
+      background-color: #fafafa;
+      border-radius: 10px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .product-select-group {
+      flex: 2;
+    }
+
+    .quantity-group {
+      flex: 1;
+      max-width: 120px;
+    }
+
+    .remove-btn {
+      width: 35px;
+      height: 35px;
+      border: none;
+      border-radius: 6px;
+      background: #333;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .remove-btn:hover {
+      background: #555;
+      color: white;
+    }
+
+    .remove-btn i {
+      font-size: 14px;
+    }
+
+    /* Estilos para los selects de productos y quantity del backend */
+    .sale-product-select,
+    .sale-quantity-input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      background-color: white;
+      transition: border-color 0.3s ease;
+      outline: none;
+    }
+
+    .sale-product-select:focus,
+    .sale-quantity-input:focus {
+      border-color: #333;
+    }
+
+    .sale-quantity-input::placeholder {
+      color: #999;
+    }
+
+    .sale-product-select {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 12px center;
+      background-repeat: no-repeat;
+      background-size: 16px;
+      padding-right: 40px;
+    }
+
+    .total-display {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      background-color: #f8f8f8;
+      border-radius: 10px;
+      border: 2px solid #e0e0e0;
+    }
+
+    .total-text {
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .create-sale-btn {
+      width: 100%;
+      background-color: #333;
+      color: white;
+      border: none;
+      padding: 18px;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .create-sale-btn:hover {
+      background-color: #555;
+    }
+
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .customer-info {
+        flex-direction: column;
+      }
+      
+      .product-row {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .quantity-group {
+        max-width: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'home' %}">
+      <i class="fas fa-chart-line me-2"></i>GESTIOFI
+    </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+            <i class="fas fa-user me-1"></i>Mi Cuenta
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="{% url 'my_account' %}">
+              <i class="fas fa-user-circle me-2"></i>Perfil
+            </a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <form action="{% url 'logout' %}" method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="dropdown-item w-100 text-start border-0" style="background: none; border: none; color: #dc3545;">
+                  <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                </button>
+              </form>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  <div class="sale-container">
+    <h1 class="sale-title">Nueva Venta</h1>
+    
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      
+      <!-- Información del cliente -->
+      <div class="customer-info">
+        <div class="input-group">
+          {{ form.name }}
+        </div>
+        <div class="input-group">
+          {{ form.enterprise }}
+        </div>
+      </div>
+
+      <!-- Productos -->
+      <div class="products-section">
+        {{ formset.management_form }}
+        <div id="products-container">
+          {% for sale_product_form in formset %}
+          <div class="product-row">
+            <div class="product-select-group">
+              {{ sale_product_form.product }}
+            </div>
+            <div class="quantity-group">
+              {{ sale_product_form.quantity }}
+            </div>
+            <button type="button" class="remove-btn" onclick="removeProductRow(this)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Total -->
+      <div class="total-display">
+        <div class="total-text">Total: $<span id="total-amount">0.00</span></div>
+      </div>
+
+      <!-- Botón crear venta -->
+      <button type="submit" class="create-sale-btn">Crear Venta</button>
+    </form>
+  </div>
+
+  <script>
+
+    // Función para remover una fila de producto
+    function removeProductRow(button) {
+      const row = button.parentElement;
+      const quantityInput = row.querySelector('.sale-quantity-input');
+      const productSelect = row.querySelector('.sale-product-select');
+      
+      // Limpiar los campos antes de remover
+      if (quantityInput) quantityInput.value = '';
+      if (productSelect) productSelect.value = '';
+      
+      // Ocultar la fila en lugar de removerla para mantener la estructura del formset
+      row.style.display = 'none';
+      
+      // Recalcular total
+      calculateTotal();
+    }
+
+    function calculateTotal() {
+      let total = 0;
+      const productRows = document.querySelectorAll('.product-row');
+      
+      productRows.forEach((row) => {
+        if (row.style.display === 'none') return;
+        
+        const quantityInput = row.querySelector('.sale-quantity-input');
+        const productSelect = row.querySelector('.sale-product-select');
+        
+        if (!productSelect || !quantityInput) return;
+        
+        const selectedOption = productSelect.options[productSelect.selectedIndex];
+        if (!selectedOption || !selectedOption.value) return;
+        
+        const text = selectedOption.text.trim();
+        // Busca el último número en el texto (asumiendo que es el precio)
+        const matches = text.match(/(\d+(?:[.,]\d{1,2})?)/g);
+        const price = matches ? parseFloat(matches[matches.length - 1].replace(',', '.')) : 0;
+        const quantity = parseFloat(quantityInput.value) || 0;
+        
+        total += price * quantity;
+      });
+      
+      document.getElementById('total-amount').textContent = `${total.toFixed(2)}`;
+    }
+
+
+    // Agregar event listeners para recalcular el total
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      // Usar delegación de eventos para manejar elementos dinámicos
+      document.addEventListener('input', function(event) {
+        if (event.target.classList.contains('sale-quantity-input')) {
+          calculateTotal();
+        }
+      });
+      
+      document.addEventListener('change', function(event) {
+        if (event.target.classList.contains('sale-product-select') || 
+            event.target.classList.contains('sale-quantity-input')) {
+          calculateTotal();
+        }
+      });
+      
+      // Calcular total inicial
+      setTimeout(function() {
+        calculateTotal();
+        const allInputs = document.querySelectorAll('.sale-quantity-input');
+        const allSelects = document.querySelectorAll('.sale-product-select');
+        const totalElement = document.getElementById('total-amount');
+        
+        // Mostrar valores iniciales
+        allInputs.forEach((input, i) => {
+        });
+        
+        allSelects.forEach((select, i) => {
+        });
+      }, 100);
+    });
+  </script>
+</body>
+</html>
