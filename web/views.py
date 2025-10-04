@@ -281,3 +281,66 @@ class TotalSaleDayView(LoginRequiredMixin, TemplateView):
         context['total_sales'] = total_sales
         context['ventas'] = Sale.objects.filter(enterprise=self.request.user)
         return context
+
+
+class EstadisticsView(LoginRequiredMixin, TemplateView):
+    template_name = "web/Estadistics.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        sales = Sale.objects.filter(enterprise=self.request.user)
+        products = Product.objects.filter(empresa=self.request.user)
+        
+        # Datos para estadísticas generales
+        total_sales = sum(sale.total for sale in sales)
+        total_orders = sales.count()
+        avg_order = total_sales / total_orders if total_orders > 0 else 0
+        
+        # Datos para gráfico de ventas por mes
+        from datetime import datetime
+        from collections import defaultdict
+        
+        sales_by_month = defaultdict(float)
+        for sale in sales:
+            month_key = sale.date.strftime('%Y-%m')
+            sales_by_month[month_key] += float(sale.total)
+        
+        # Generar datos para los últimos 12 meses
+        import calendar
+        from datetime import date, timedelta
+        
+        months_data = []
+        sales_data = []
+        
+        for i in range(11, -1, -1):
+            target_date = date.today() - timedelta(days=30*i)
+            month_key = target_date.strftime('%Y-%m')
+            month_name = calendar.month_name[target_date.month]
+            months_data.append(month_name)
+            sales_data.append(float(sales_by_month.get(month_key, 0)))
+        
+        # Datos para productos más vendidos
+        from collections import Counter
+        
+        product_sales = Counter()
+        for sale in sales:
+            for sale_product in sale.saleproduct_set.all():
+                product_sales[sale_product.product.name] += sale_product.quantity
+        
+        # Top 5 productos más vendidos
+        top_products = product_sales.most_common(5)
+        product_names = [item[0] for item in top_products]
+        product_quantities = [item[1] for item in top_products]
+        
+        context.update({
+            'sales': sales,
+            'products': products,
+            'total_sales': total_sales,
+            'total_orders': total_orders,
+            'avg_order': avg_order,
+            'months_data': months_data,
+            'sales_data': sales_data,
+            'product_names': product_names,
+            'product_quantities': product_quantities,
+        })
+        return context

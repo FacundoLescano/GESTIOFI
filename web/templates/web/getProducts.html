@@ -19,6 +19,7 @@
             background-color: var(--primary-white);
             color: var(--primary-black);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-bottom: 100px;
         }
         
         .navbar {
@@ -73,7 +74,7 @@
             background-color: var(--primary-white);
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
             overflow: hidden;
         }
         
@@ -136,7 +137,119 @@
         }
         
         .main-container {
-            padding: 2rem 0;
+            padding: 0.5rem 0;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: var(--primary-white);
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-gray);
+            margin-bottom: 0.25rem;
+        }
+
+        .filter-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            min-width: 200px;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary-black);
+            margin-bottom: 0.25rem;
+        }
+
+        .filter-btn {
+            background-color: var(--primary-white);
+            border: 2px solid var(--border-gray);
+            border-radius: 6px;
+            color: var(--primary-black);
+            padding: 8px 16px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            min-width: 140px;
+        }
+
+        .filter-btn:hover {
+            background-color: var(--primary-black);
+            border-color: var(--primary-black);
+            color: var(--primary-white);
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary-black);
+            border-color: var(--primary-black);
+            color: var(--primary-white);
+        }
+
+        .filter-input {
+            border: 2px solid var(--border-gray);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease;
+            background-color: var(--primary-white);
+            color: var(--primary-black);
+        }
+
+        .filter-input:focus {
+            border-color: var(--primary-black);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-input::placeholder {
+            color: var(--accent-gray);
+        }
+
+        .filter-select {
+            border: 2px solid var(--border-gray);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            background-color: var(--primary-white);
+            color: var(--primary-black);
+            transition: border-color 0.3s ease;
+        }
+
+        .filter-select:focus {
+            border-color: var(--primary-black);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .filter-row {
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+            }
+            
+            .filter-group {
+                min-width: 250px;
+            }
         }
         
         .section-title {
@@ -155,16 +268,82 @@
         .table-responsive {
             flex: 1;
             overflow-y: auto;
-            max-height: 70vh;
+            max-height: 50vh;
+        }
+
+        .show-more-btn {
+            background-color: var(--primary-white);
+            border: 2px solid var(--border-gray);
+            border-radius: 6px;
+            color: var(--primary-black);
+            padding: 8px 16px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            width: 100%;
+        }
+
+        .show-more-btn:hover {
+            background-color: var(--primary-black);
+            border-color: var(--primary-black);
+            color: var(--primary-white);
+        }
+
+        .stats-btn {
+            background-color: #0d6efd;
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            width: auto;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+        }
+
+        .stats-btn:hover {
+            background-color: #0b5ed7;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
+        }
+
+        .hidden-rows {
+            display: none;
         }
         
         @media (max-width: 991.98px) {
             .col-lg-6 {
-                margin-bottom: 2rem;
+                margin-bottom: 1rem;
             }
             
             .table-responsive {
-                max-height: 50vh;
+                max-height: 40vh;
+            }
+            
+            .stats-btn {
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                width: auto;
+                font-size: 1rem;
+                padding: 12px 20px;
+            }
+            
+            body {
+                padding-bottom: 120px;
             }
         }
     </style>
@@ -178,17 +357,27 @@
       <i class="fas fa-chart-line me-2"></i>GESTIOFI
     </a>
     
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
     
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
             <i class="fas fa-user me-1"></i>Mi Cuenta
           </a>
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="{% url 'create_sale' %}">
+              <i class="fas fa-plus-circle me-2"></i>Crear Venta
+            </a></li>
+            <li><a class="dropdown-item" href="{% url 'create_product' %}">
+              <i class="fas fa-box me-2"></i>Crear Producto
+            </a></li>
+            <li><a class="dropdown-item" href="{% url 'total_sales_day' %}">
+              <i class="fas fa-calendar-alt me-2"></i>Cuenta Diaria
+            </a></li>
+            <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{% url 'my_account' %}">
               <i class="fas fa-user-circle me-2"></i>Perfil
             </a></li>
@@ -196,7 +385,7 @@
             <li>
               <form action="{% url 'logout' %}" method="post" class="d-inline">
                 {% csrf_token %}
-                <button type="submit" class="dropdown-item btn-logout w-100 text-start border-0">
+                <button type="submit" class="dropdown-item w-100 text-start border-0" style="background: none; border: none; color: #dc3545;">
                   <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
                 </button>
               </form>
@@ -208,6 +397,43 @@
   </div>
 </nav>
 
+<!-- Filter Section -->
+<div class="filter-section">
+  <div class="filter-container">
+    <div class="filter-row">
+      <!-- Ver Todo -->
+      <div class="filter-group">
+        <label class="filter-label">Ver Todo</label>
+        <button class="filter-btn active" onclick="showAllData()">
+          Mostrar Todo
+        </button>
+      </div>
+
+      <!-- Filtrar por Cliente -->
+      <div class="filter-group">
+        <label class="filter-label">Ventas por Cliente</label>
+        <input type="text" class="filter-input" id="clientFilter" placeholder="Nombre del cliente..." onkeyup="filterByClient(this.value)">
+      </div>
+
+      <!-- Filtrar por Fecha -->
+      <div class="filter-group">
+        <label class="filter-label">Ventas por Fecha</label>
+        <input type="date" class="filter-input" id="dateFilter" onchange="filterByDate(this.value)">
+      </div>
+
+      <!-- Filtrar por Categoría -->
+      <div class="filter-group">
+        <label class="filter-label">Productos por Categoría</label>
+          <select class="filter-select" id="categoryFilter" onchange="filterByCategory(this.value)">
+            <option value="">Todas las categorías</option>
+            {% for a in Products %}
+              <option value="{{ a.category }}">{{ a.category }}</option>
+            {% endfor %}
+          </select>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="container-fluid main-container">
   <div class="container-fluid">
@@ -233,7 +459,7 @@
           </thead>
           <tbody>
             {% for i in Products %}
-            <tr>
+            <tr {% if forloop.counter > 5 %}class="hidden-rows"{% endif %}>
               <th scope="row" class="fw-bold">{{ i.id }}</th>
               <td class="fw-medium">{{ i.name }}</td>
               <td class="text-success fw-bold">${{ i.price }}</td>
@@ -263,6 +489,11 @@
           </tbody>
         </table>
       </div>
+      {% if Products|length > 5 %}
+      <button class="show-more-btn" onclick="toggleRows('products')">
+        <i class="fas fa-chevron-down me-2"></i>Ver Más Productos
+      </button>
+      {% endif %}
     </div>
       </div>
 
@@ -285,10 +516,10 @@
           </thead>
           <tbody>
             {% for a in Sales %}
-            <tr>
+            <tr {% if forloop.counter > 5 %}class="hidden-rows"{% endif %}>
               <th scope="row" class="fw-bold">{{ a.id_venta }}</th>
               <td class="fw-medium">{{ a.name }}</td>
-              <td class="text-muted">{{ a.date|date:"d/m/Y" }}</td>
+              <td class="text-muted">{{ a.date|date:"m/d/Y" }}</td>
               <td class="text-success fw-bold">${{ a.total }}</td>
               <td>
                 <div class="btn-group-vertical btn-group-sm" role="group">
@@ -319,6 +550,11 @@
           </tbody>
         </table>
       </div>
+      {% if Sales|length > 5 %}
+      <button class="show-more-btn" onclick="toggleRows('sales')">
+        <i class="fas fa-chevron-down me-2"></i>Ver Más Ventas
+      </button>
+      {% endif %}
     </div>
       </div>
 
@@ -326,8 +562,236 @@
   </div>
 </div>
 
+<!-- Botón de Estadísticas Flotante -->
+<form action="{% url 'estadistics' %}" method="get">
+  <button type="submit" class="stats-btn">
+    <i class="fas fa-chart-bar me-2"></i>Ver Estadísticas de Ventas
+  </button>
+</form>
+
 
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+<script>
+// Filter functionality
+let currentFilter = 'all';
+
+function clearAllFilters() {
+    // Clear all input values
+    document.getElementById('clientFilter').value = '';
+    document.getElementById('dateFilter').value = '';
+    document.getElementById('categoryFilter').value = '';
+}
+
+function setActiveButton() {
+    // Remove active class from all buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Add active class to "Mostrar Todo" button
+    document.querySelector('.filter-btn').classList.add('active');
+}
+
+function filterByClient(clientName) {
+    if (clientName.trim() === '') {
+        showAllData();
+        return;
+    }
+    
+    // Remove active state from "Mostrar Todo" button
+    document.querySelector('.filter-btn').classList.remove('active');
+    
+    // Show only sales table
+    document.querySelector('.table-container:first-child').style.display = 'none'; // Hide products
+    document.querySelector('.table-container:last-child').style.display = 'block'; // Show sales
+    
+    // Filter sales by client name
+    const salesRows = document.querySelectorAll('.table-container:last-child tbody tr');
+    
+    salesRows.forEach(row => {
+        const clientCell = row.cells[1]; // Client name is in second column
+        if (clientCell) {
+            const clientText = clientCell.textContent.toLowerCase();
+            const searchText = clientName.toLowerCase();
+            
+            if (clientText.includes(searchText)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        }
+    });
+    
+    console.log(`Filtrando ventas por cliente: "${clientName}"`);
+}
+
+function filterByDate(selectedDate) {
+    if (selectedDate === '') {
+        showAllData();
+        return;
+    }
+    
+    // Remove active state from "Mostrar Todo" button
+    document.querySelector('.filter-btn').classList.remove('active');
+    
+    // Get both table containers by their position in the row
+    const allContainers = document.querySelectorAll('.col-lg-6 .table-container');
+    const productsContainer = allContainers[0]; // First container (products)
+    const salesContainer = allContainers[1]; // Second container (sales)
+    
+    // Hide products, show sales
+    productsContainer.parentElement.style.display = 'none';
+    salesContainer.parentElement.style.display = 'block';
+    
+    // Convert selected date to MM/DD/YYYY format for comparison
+    const dateObj = new Date(selectedDate + 'T00:00:00');
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    const year = dateObj.getFullYear();
+    const formattedDate = `${month}/${day}/${year}`;
+    
+    console.log(`Buscando fecha: "${formattedDate}"`);
+    
+    // Filter sales by date
+    const salesRows = salesContainer.querySelectorAll('tbody tr');
+    
+    salesRows.forEach(row => {
+        const dateCell = row.cells[2]; // Date is in third column
+        if (dateCell) {
+            const cellDate = dateCell.textContent.trim();
+            console.log(`Comparando con fecha de tabla: "${cellDate}"`);
+            
+            if (cellDate === formattedDate) {
+                row.style.display = '';
+                console.log('Fila mostrada');
+            } else {
+                row.style.display = 'none';
+                console.log('Fila oculta');
+            }
+        }
+    });
+    
+    console.log(`Filtrando ventas por fecha: "${formattedDate}"`);
+}
+
+function filterByCategory(selectedCategory) {
+    if (selectedCategory === '') {
+        showAllData();
+        return;
+    }
+    
+    // Remove active state from "Mostrar Todo" button
+    document.querySelector('.filter-btn').classList.remove('active');
+    
+    // Get both table containers by their position in the row
+    const allContainers = document.querySelectorAll('.col-lg-6 .table-container');
+    const productsContainer = allContainers[0]; // First container (products)
+    const salesContainer = allContainers[1]; // Second container (sales)
+    
+    // Show products, hide sales
+    productsContainer.parentElement.style.display = 'block';
+    salesContainer.parentElement.style.display = 'none';
+    
+    console.log(`Filtrando productos por categoría: "${selectedCategory}"`);
+    
+    // Filter products by category
+    const productRows = productsContainer.querySelectorAll('tbody tr');
+    
+    console.log(`Encontradas ${productRows.length} filas de productos`);
+    
+    productRows.forEach((row, index) => {
+        const categoryCell = row.cells[3]; // Category is in fourth column
+        if (categoryCell) {
+            const categoryBadge = categoryCell.querySelector('.badge');
+            const categoryText = categoryBadge ? categoryBadge.textContent.trim() : categoryCell.textContent.trim();
+            console.log(`Fila ${index}: Categoría "${categoryText}" vs "${selectedCategory}"`);
+            
+            if (categoryText === selectedCategory) {
+                row.style.display = '';
+                console.log(`Fila ${index}: Mostrada`);
+            } else {
+                row.style.display = 'none';
+                console.log(`Fila ${index}: Oculta`);
+            }
+        }
+    });
+    
+    console.log(`Filtrado completado para categoría: "${selectedCategory}"`);
+}
+
+// También actualiza la función showAllData para que funcione correctamente
+function showAllData() {
+    currentFilter = 'all';
+    clearAllFilters();
+    setActiveButton();
+    
+    // Show all column containers
+    document.querySelectorAll('.col-lg-6').forEach(col => {
+        col.style.display = 'block';
+    });
+    
+    // Show all rows in both tables
+    document.querySelectorAll('tbody tr').forEach(row => {
+        row.style.display = '';
+    });
+    
+    console.log('Mostrando todos los datos');
+}
+
+function toggleRows(tableType) {
+    // Find the correct table container
+    const containers = document.querySelectorAll('.col-lg-6 .table-container');
+    const targetContainer = tableType === 'products' ? containers[0] : containers[1];
+    const rows = targetContainer.querySelectorAll('tbody tr.hidden-rows');
+    const button = event.target.closest('.show-more-btn');
+    
+    if (rows.length === 0) {
+        console.warn('No hay filas ocultas');
+        return;
+    }
+    
+    // Check if hidden rows are currently visible by checking the first row
+    // Si no tiene style.display o es '', significa que está visible
+    const firstRow = rows[0];
+    const isCurrentlyHidden = firstRow.style.display === 'none' || 
+                              window.getComputedStyle(firstRow).display === 'none';
+    
+    rows.forEach(row => {
+        if (isCurrentlyHidden) {
+            // Show all hidden rows
+            row.style.display = 'table-row';
+        } else {
+            // Hide all hidden rows
+            row.style.display = 'none';
+        }
+    });
+    
+    // Update button text and icon
+    const tableName = tableType === 'products' ? 'Productos' : 'Ventas';
+    
+    if (isCurrentlyHidden) {
+        button.innerHTML = '<i class="fas fa-chevron-up me-2"></i>Ver Menos';
+    } else {
+        button.innerHTML = `<i class="fas fa-chevron-down me-2"></i>Ver Más ${tableName}`;
+    }
+    
+    console.log(`${isCurrentlyHidden ? 'Mostradas' : 'Ocultadas'} ${rows.length} filas de ${tableName}`);
+  }
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Filtros inicializados');
+    
+    // Add click animation to "Mostrar Todo" button
+    document.querySelector('.filter-btn').addEventListener('click', function() {
+        this.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            this.style.transform = 'scale(1)';
+        }, 150);
+    });
+});
+</script>
 
 </body>
 </html>
