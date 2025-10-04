@@ -28,5 +28,4 @@ class SaleProduct(models.Model):
     quantity = models.IntegerField()
 
     def __str__(self):
-        #return f"{self.quantity} of {self.product.name} in sale {self.sale.id_venta}"
-        return f"{self.name} - ${self.price}"
+        return f"{self.quantity} of {self.product.name} in sale {self.sale.id_venta}"

@@ -209,19 +209,20 @@ class GeneratePDFView(LoginRequiredMixin, TemplateView):
         table_data = [['Producto', 'Categoría', 'Precio Unit.', 'Cantidad', 'Subtotal']]
         
         total_venta = 0
-        for product in sale.products.all():
+        for sale_product in sale.saleproduct_set.all():
+            product = sale_product.product
+            quantity = sale_product.quantity
+            
             # Verificar que el producto existe y tiene precio
             if product and product.price is not None:
-                # Asumiendo cantidad 1 por producto (puedes modificar esto según tu lógica)
-                cantidad = 1
-                subtotal = float(product.price) * cantidad
+                subtotal = float(product.price) * quantity
                 total_venta += subtotal
                 
                 table_data.append([
                     product.name,
                     product.category,
                     f"${product.price}",
-                    str(cantidad),
+                    str(quantity),
                     f"${subtotal:.2f}"
                 ])
         
@@ -245,7 +246,7 @@ class GeneratePDFView(LoginRequiredMixin, TemplateView):
         # Total
         story.append(Paragraph("_" * 50, info_style))
         story.append(Spacer(1, 10))
-        story.append(Paragraph(f"<b>TOTAL: ${sale.total}</b>", 
+        story.append(Paragraph(f"<b>TOTAL: ${total_venta:.2f}</b>", 
                               ParagraphStyle('TotalStyle', parent=info_style, 
                                             fontSize=14, alignment=TA_RIGHT)))
         story.append(Spacer(1, 30))
