@@ -199,6 +199,7 @@ class GeneratePDFView(LoginRequiredMixin, TemplateView):
         story.append(Paragraph(f"<b>Número de Ticket:</b> {sale.id_venta}", info_style))
         story.append(Paragraph(f"<b>Cliente:</b> {sale.name}", info_style))
         story.append(Paragraph(f"<b>Fecha:</b> {sale.date.strftime('%d/%m/%Y %H:%M')}", info_style))
+        story.append(Paragraph(f"TICKET NO VALIDO COMO FACTURA.", info_style))
         story.append(Spacer(1, 20))
         
         # Tabla de productos
