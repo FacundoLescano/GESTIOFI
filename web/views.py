@@ -278,10 +278,16 @@ class TotalSaleDayView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        sales = Sale.objects.filter(enterprise=self.request.user)
+        from datetime import date
+        today = date.today()
+
+        # Filtrar ventas solo del día de hoy
+        sales = Sale.objects.filter(enterprise=self.request.user, date__date=today)
         total_sales = sum(sale.total for sale in sales)
+
         context['total_sales'] = total_sales
-        context['ventas'] = Sale.objects.filter(enterprise=self.request.user)
+        context['ventas'] = sales
+        context['today'] = today
         return context
 
 
@@ -346,3 +352,170 @@ class EstadisticsView(LoginRequiredMixin, TemplateView):
             'product_quantities': product_quantities,
         })
         return context
+
+class GenerateDailyReportView(LoginRequiredMixin, TemplateView):
+    """Vista para generar el PDF del cierre diario de ventas"""
+
+    def post(self, request, *args, **kwargs):
+        from datetime import date
+
+        today = date.today()
+
+        # Filtrar ventas del día de hoy
+        today_sales = Sale.objects.filter(enterprise=self.request.user, date__date=today)
+
+        # Calcular el total del día
+        total_day = sum(sale.total for sale in today_sales)
+
+        # Crear respuesta HTTP para el PDF
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="cierre_diario_{today.strftime("%d_%m_%Y")}.pdf"'
+
+        # Crear el documento PDF
+        doc = SimpleDocTemplate(response, pagesize=A4,
+                              rightMargin=72, leftMargin=72,
+                              topMargin=72, bottomMargin=18)
+
+        # Obtener estilos
+        styles = getSampleStyleSheet()
+
+        # Crear estilos personalizados
+        title_style = ParagraphStyle(
+            'CustomTitle',
+            parent=styles['Heading1'],
+            fontSize=28,
+            spaceAfter=30,
+            alignment=TA_CENTER,
+            textColor=colors.HexColor('#667eea'),
+            fontName='Helvetica-Bold'
+        )
+
+        company_style = ParagraphStyle(
+            'CompanyStyle',
+            parent=styles['Heading2'],
+            fontSize=18,
+            spaceAfter=20,
+            alignment=TA_CENTER,
+            textColor=colors.black
+        )
+
+        info_style = ParagraphStyle(
+            'InfoStyle',
+            parent=styles['Normal'],
+            fontSize=12,
+            spaceAfter=10,
+            alignment=TA_LEFT,
+            textColor=colors.black
+        )
+
+        total_style = ParagraphStyle(
+            'TotalStyle',
+            parent=styles['Heading1'],
+            fontSize=36,
+            spaceAfter=20,
+            alignment=TA_CENTER,
+            textColor=colors.HexColor('#28a745'),
+            fontName='Helvetica-Bold'
+        )
+
+        # Obtener datos de la empresa
+        company = self.request.user
+
+        # Construir el contenido del PDF
+        story = []
+
+        # Título del reporte
+        story.append(Paragraph("CIERRE DEL DÍA", title_style))
+        story.append(Spacer(1, 20))
+
+        # Información de la empresa
+        story.append(Paragraph(f"<b>{company.username}</b>", company_style))
+        story.append(Paragraph(f"Email: {company.email}", info_style))
+        story.append(Spacer(1, 20))
+
+        # Línea separadora
+        story.append(Paragraph("=" * 80, info_style))
+        story.append(Spacer(1, 20))
+
+        # Fecha del cierre
+        story.append(Paragraph(f"<b>Fecha:</b> {today.strftime('%d/%m/%Y')}",
+                              ParagraphStyle('DateStyle', parent=info_style, fontSize=14)))
+        story.append(Paragraph(f"<b>Número de ventas:</b> {today_sales.count()}",
+                              ParagraphStyle('CountStyle', parent=info_style, fontSize=14)))
+        story.append(Spacer(1, 30))
+
+        # Total del día (destacado)
+        story.append(Paragraph("TOTAL DEL DÍA",
+                              ParagraphStyle('TotalLabel', parent=info_style,
+                                           fontSize=16, alignment=TA_CENTER,
+                                           textColor=colors.HexColor('#667eea'))))
+        story.append(Spacer(1, 10))
+        story.append(Paragraph(f"${total_day:.2f}", total_style))
+        story.append(Spacer(1, 30))
+
+        # Tabla de ventas del día
+        if today_sales.exists():
+            story.append(Paragraph("=" * 80, info_style))
+            story.append(Spacer(1, 20))
+            story.append(Paragraph("<b>DETALLE DE VENTAS DEL DÍA</b>",
+                                  ParagraphStyle('DetailTitle', parent=info_style,
+                                               fontSize=14, alignment=TA_CENTER)))
+            story.append(Spacer(1, 15))
+
+            # Crear datos para la tabla
+            table_data = [['ID', 'Cliente', 'Hora', 'Total']]
+
+            for sale in today_sales:
+                table_data.append([
+                    str(sale.id_venta),
+                    sale.name,
+                    sale.date.strftime('%H:%M'),
+                    f"${sale.total:.2f}"
+                ])
+
+            # Crear la tabla
+            table = Table(table_data, colWidths=[1*inch, 3*inch, 1.5*inch, 1.5*inch])
+            table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#667eea')),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 12),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                ('TOPPADDING', (0, 0), (-1, 0), 12),
+                ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                ('FONTSIZE', (0, 1), (-1, -1), 10),
+                ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#f8f9fa')]),
+            ]))
+
+            story.append(table)
+            story.append(Spacer(1, 30))
+        else:
+            story.append(Paragraph("=" * 80, info_style))
+            story.append(Spacer(1, 20))
+            story.append(Paragraph("No hay ventas registradas para el día de hoy",
+                                  ParagraphStyle('NoSales', parent=info_style,
+                                               fontSize=14, alignment=TA_CENTER,
+                                               textColor=colors.HexColor('#6c757d'))))
+            story.append(Spacer(1, 30))
+
+        # Línea separadora final
+        story.append(Paragraph("=" * 80, info_style))
+        story.append(Spacer(1, 20))
+
+        # Pie del reporte
+        story.append(Paragraph(f"Reporte generado el: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}",
+                              ParagraphStyle('FooterStyle', parent=info_style,
+                                           alignment=TA_CENTER, fontSize=10,
+                                           textColor=colors.HexColor('#6c757d'))))
+        story.append(Spacer(1, 10))
+        story.append(Paragraph("GESTIOFI - Sistema de Gestión de Ventas",
+                              ParagraphStyle('CompanyFooter', parent=info_style,
+                                           alignment=TA_CENTER, fontSize=10,
+                                           textColor=colors.HexColor('#6c757d'))))
+
+        # Construir el PDF
+        doc.build(story)
+
+        return response

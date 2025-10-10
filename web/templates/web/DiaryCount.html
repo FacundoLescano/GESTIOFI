@@ -1,21 +1,426 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Cierre Diario - GESTIOFI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-black: #000000;
+            --primary-white: #ffffff;
+            --secondary-gray: #f8f9fa;
+            --accent-gray: #6c757d;
+            --border-gray: #dee2e6;
+            --success-green: #28a745;
+            --danger-red: #dc3545;
+        }
+
+        body {
+            background: white;
+            color: var(--primary-black);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background-color: black;
+            border-bottom: 1px solid var(--border-gray);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            color: var(--primary-white) !important;
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+
+        .navbar-toggler {
+            border-color: var(--primary-white);
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+
+        .dropdown-menu {
+            background-color: var(--primary-white);
+            border: 1px solid var(--border-gray);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .dropdown-item {
+            color: var(--primary-black);
+            transition: background-color 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--secondary-gray);
+            color: var(--primary-black);
+        }
+
+        .btn-logout {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: var(--primary-white);
+        }
+
+        .btn-logout:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+            color: var(--primary-white);
+        }
+
+        /* Main Container */
+        .main-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        /* Sales Bubble Card */
+        .sales-bubble {
+            background: var(--primary-white);
+            border-radius: 30px;
+            padding: 3rem 2.5rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .bubble-header {
+            margin-bottom: 2rem;
+        }
+
+        .bubble-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-black);
+            margin-bottom: 0.5rem;
+        }
+
+        .bubble-date {
+            font-size: 1rem;
+            color: var(--accent-gray);
+            font-weight: 500;
+        }
+
+        .sales-amount-container {
+            background: black;
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sales-amount-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        .sales-label {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .sales-amount {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--primary-white);
+            line-height: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sales-count {
+            margin-top: 1rem;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        /* Sales List */
+        .sales-list-container {
+            margin-bottom: 2rem;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 1rem;
+            background: var(--secondary-gray);
+            border-radius: 15px;
+        }
+
+        .sales-list-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sales-list-container::-webkit-scrollbar-track {
+            background: #e9ecef;
+            border-radius: 10px;
+        }
+
+        .sales-list-container::-webkit-scrollbar-thumb {
+            background: var(--accent-gray);
+            border-radius: 10px;
+        }
+
+        .sales-list-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-black);
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .sale-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: var(--primary-white);
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            transition: transform 0.2s ease;
+        }
+
+        .sale-item:hover {
+            transform: translateX(5px);
+        }
+
+        .sale-info {
+            text-align: left;
+        }
+
+        .sale-client {
+            font-weight: 600;
+            color: var(--primary-black);
+            font-size: 0.95rem;
+        }
+
+        .sale-date {
+            font-size: 0.85rem;
+            color: var(--accent-gray);
+        }
+
+        .sale-total {
+            font-weight: 700;
+            color: var(--success-green);
+            font-size: 1.1rem;
+        }
+
+        /* PDF Button */
+        .pdf-button {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            border: none;
+            color: var(--primary-white);
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
+            width: 100%;
+        }
+
+        .pdf-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(220, 53, 69, 0.5);
+            background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+        }
+
+        .pdf-button:active {
+            transform: translateY(-1px);
+        }
+
+        .pdf-button i {
+            margin-right: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sales-bubble {
+                padding: 2rem 1.5rem;
+            }
+
+            .bubble-title {
+                font-size: 1.5rem;
+            }
+
+            .sales-amount {
+                font-size: 2.5rem;
+            }
+
+            .pdf-button {
+                padding: 0.875rem 2rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* Empty State */
+        .empty-state {
+            padding: 2rem;
+            text-align: center;
+            color: var(--accent-gray);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+    </style>
 </head>
 <body>
 
-    <h1>Diario de ventas</h1>
-    <p>Total de ventas: {{ total_sales }}</p>
-    <p>Ventas por categoría:</p>
-    <ul>
-        {% for a in ventas %}
-            <li>{{ a.name }}</li>
-            <li>{{ a.date }}</li>
-        {% endfor %}
-    </ul>
-    
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'home' %}">
+            <i class="fas fa-chart-line me-2"></i>GESTIOFI
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user me-1"></i>Mi Cuenta
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{% url 'create_sale' %}">
+                            <i class="fas fa-plus-circle me-2"></i>Crear Venta
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'create_product' %}">
+                            <i class="fas fa-box me-2"></i>Crear Producto
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'total_sales_day' %}">
+                            <i class="fas fa-calendar-alt me-2"></i>Cuenta Diaria
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'my_account' %}">
+                            <i class="fas fa-user-circle me-2"></i>Perfil
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form action="{% url 'logout' %}\" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item w-100 text-start border-0" style="background: none; border: none; color: #dc3545;">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Container -->
+<div class="main-container">
+    <div class="sales-bubble">
+        <!-- Header -->
+        <div class="bubble-header">
+            <h1 class="bubble-title">
+                <i class="fas fa-calendar-check me-2"></i>Cierre del Día
+            </h1>
+            <p class="bubble-date">
+                <i class="far fa-calendar me-1"></i>{{ today|date:"d/m/Y" }}
+            </p>
+        </div>
+
+        <!-- Sales Amount -->
+        <div class="sales-amount-container">
+            <div class="sales-label">Total de Ventas</div>
+            <div class="sales-amount">${{ total_sales|floatformat:2 }}</div>
+            <div class="sales-count">
+                <i class="fas fa-shopping-cart me-1"></i>
+                {{ ventas|length }} venta{{ ventas|length|pluralize }}
+            </div>
+        </div>
+
+        <!-- Sales List -->
+        {% if ventas %}
+        <div class="sales-list-container">
+            <h3 class="sales-list-title">
+                <i class="fas fa-list me-2"></i>Detalle de Ventas
+            </h3>
+            {% for a in ventas %}
+            <div class="sale-item">
+                <div class="sale-info">
+                    <div class="sale-client">{{ a.name }}</div>
+                    <div class="sale-date">
+                        <i class="far fa-clock me-1"></i>{{ a.date|date:"H:i" }}
+                    </div>
+                </div>
+                <div class="sale-total">${{ a.total|floatformat:2 }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <p>No hay ventas registradas para hoy</p>
+        </div>
+        {% endif %}
+
+        <!-- PDF Button -->
+        <form action="{% url 'generate_daily_report' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="pdf-button">
+                <i class="fas fa-file-pdf"></i>Generar Reporte de Cierre
+            </button>
+        </form>
+    </div>
+</div>
+
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
 </body>
 </html>
