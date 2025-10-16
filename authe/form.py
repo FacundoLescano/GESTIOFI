@@ -71,20 +71,27 @@ class SaleForm(forms.ModelForm):
             'placeholder': 'Empresa'
         })
     )
+
     total = forms.DecimalField(
-        max_digits=10, 
-        decimal_places=2, 
-        required=False, 
+        max_digits=10,
+        decimal_places=2,
+        required=False,
         initial=0.00,
         widget=forms.NumberInput(attrs={
             'class': 'sale-total-input',
             'readonly': True
         })
     )
-    
+    porcentage_discount = forms.IntegerField(
+        required=True,
+        widget=forms.NumberInput(attrs={
+            'class': 'sale-discount-input',
+            'placeholder': 'Descuento (%)'
+        })
+    )
     class Meta:
         model = Sale
-        fields = ['name', 'enterprise', 'total'] 
+        fields = ['name', 'enterprise', 'total', 'porcentage_discount'] 
 
 class SaleProductForm(forms.ModelForm):
     product = forms.ModelChoiceField(

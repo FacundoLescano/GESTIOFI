@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -197,6 +198,30 @@
       padding-right: 40px;
     }
 
+    /* Estilos para el input de descuento */
+    .discount-section {
+      margin-bottom: 20px;
+    }
+
+    #porcentage-discount {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      background-color: white;
+      transition: border-color 0.3s ease;
+      outline: none;
+    }
+
+    #porcentage-discount:focus {
+      border-color: #333;
+    }
+
+    #porcentage-discount::placeholder {
+      color: #999;
+    }
+
     .total-display {
       text-align: center;
       margin-bottom: 30px;
@@ -230,7 +255,6 @@
     .create-sale-btn:hover {
       background-color: #555;
     }
-
 
     .hidden {
       display: none;
@@ -336,6 +360,11 @@
         </div>
       </div>
 
+      <!-- Porcentaje de descuento -->
+      <div class="discount-section">
+        <input type="number" id="porcentage-discount" name="porcentage_discount" placeholder="Porcentaje de descuento (%)">
+      </div>
+
       <!-- Total -->
       <div class="total-display">
         <div class="total-text">Total: $<span id="total-amount">0.00</span></div>
@@ -347,7 +376,6 @@
   </div>
 
   <script>
-
     // Función para remover una fila de producto
     function removeProductRow(button) {
       const row = button.parentElement;
@@ -368,14 +396,24 @@
     function calculateTotal() {
       let total = 0;
       const productRows = document.querySelectorAll('.product-row');
+      const porcentageDiscountInput = document.getElementById('porcentage-discount');
+      const porcentageDiscount = parseFloat(porcentageDiscountInput.value) || 0;
+      
+      // Validar que el porcentaje esté entre 0 y 100
+      if (porcentageDiscount < 0) {
+        porcentageDiscountInput.value = 0;
+        return calculateTotal();
+      }
+      if (porcentageDiscount > 100) {
+        porcentageDiscountInput.value = 100;
+        return calculateTotal();
+      }
       
       productRows.forEach((row) => {
         if (row.style.display === 'none') return;
         
         const quantityInput = row.querySelector('.sale-quantity-input');
         const productSelect = row.querySelector('.sale-product-select');
-        
-        if (!productSelect || !quantityInput) return;
         
         const selectedOption = productSelect.options[productSelect.selectedIndex];
         if (!selectedOption || !selectedOption.value) return;
@@ -386,26 +424,27 @@
         const price = matches ? parseFloat(matches[matches.length - 1].replace(',', '.')) : 0;
         const quantity = parseFloat(quantityInput.value) || 0;
         
-        total += price * quantity;
+        const subtotal = price * quantity;
+        total += subtotal * (1 - porcentageDiscount / 100);
       });
       
-      document.getElementById('total-amount').textContent = `${total.toFixed(2)}`;
+      document.getElementById('total-amount').textContent = total.toFixed(2);
     }
-
 
     // Agregar event listeners para recalcular el total
     document.addEventListener('DOMContentLoaded', function() {
-      
       // Usar delegación de eventos para manejar elementos dinámicos
       document.addEventListener('input', function(event) {
-        if (event.target.classList.contains('sale-quantity-input')) {
+        if (event.target.classList.contains('sale-quantity-input') || 
+            event.target.id === 'porcentage-discount') {
           calculateTotal();
         }
       });
       
       document.addEventListener('change', function(event) {
         if (event.target.classList.contains('sale-product-select') || 
-            event.target.classList.contains('sale-quantity-input')) {
+            event.target.classList.contains('sale-quantity-input') ||
+            event.target.id === 'porcentage-discount') {
           calculateTotal();
         }
       });
@@ -413,16 +452,6 @@
       // Calcular total inicial
       setTimeout(function() {
         calculateTotal();
-        const allInputs = document.querySelectorAll('.sale-quantity-input');
-        const allSelects = document.querySelectorAll('.sale-product-select');
-        const totalElement = document.getElementById('total-amount');
-        
-        // Mostrar valores iniciales
-        allInputs.forEach((input, i) => {
-        });
-        
-        allSelects.forEach((select, i) => {
-        });
       }, 100);
     });
   </script>

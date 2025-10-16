@@ -56,6 +56,7 @@ class CreateSaleView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         context = self.get_context_data()
         formset = context['formset']
+        porcentage_discount = form.cleaned_data.get('porcentage_discount')
         if formset.is_valid():
             has_products = False
             for sale_product in formset:
@@ -84,7 +85,7 @@ class CreateSaleView(LoginRequiredMixin, CreateView):
                         product.stock -= quantity
                         product.save()
             # Asignar el total calculado
-            self.object.total = total_venta
+            self.object.total = total_venta - (total_venta * porcentage_discount / 100)
             self.object.save()
             formset.instance = self.object
             formset.save()
