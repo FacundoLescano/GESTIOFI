@@ -455,6 +455,7 @@
               <th scope="col">Precio</th>
               <th scope="col">Categoría</th>
               <th scope="col">Stock</th>
+              <th scope="col">Actualizar</th>
               <th scope="col">Acciones</th>
             </tr>
           </thead>
@@ -469,6 +470,14 @@
                 <span class="badge {% if i.stock > 10 %}bg-success{% elif i.stock > 0 %}bg-warning{% else %}bg-danger{% endif %}">
                   {{ i.stock }}
                 </span>
+              </td>
+              <td>
+                <form action="{% url 'update_product' i.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-outline-warning btn-sm">
+                    <i class="fa-regular fa-pen-to-square"></i>
+                  </button>
+                </form>
               </td>
               <td>
                 <form action="{% url 'delete_product' i.id %}" method="post" class="d-inline">

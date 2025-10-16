@@ -1,6 +1,6 @@
 from .models import Sale, Product, SaleProduct
 from authe.models import Company
-from django.views.generic import ListView, CreateView, TemplateView, DeleteView
+from django.views.generic import ListView, CreateView, TemplateView, DeleteView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from authe.form import SaleForm, ProductForm
 from django.urls import reverse_lazy
@@ -520,3 +520,10 @@ class GenerateDailyReportView(LoginRequiredMixin, TemplateView):
         doc.build(story)
 
         return response
+
+
+class Update_products(LoginRequiredMixin, UpdateView):
+    model = Product
+    fields = ['name', 'price', 'stock']
+    template_name = 'web/UpdateProducts.html'
+    success_url = reverse_lazy("home")
