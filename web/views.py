@@ -37,8 +37,7 @@ class CreateSaleView(LoginRequiredMixin, CreateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        # Permitir seleccionar cualquier empresa disponible
-        # form.fields['enterprise'].queryset = form.fields['enterprise'].queryset.filter(id=self.request.user.id)
+        form.fields['enterprise'].queryset = form.fields['enterprise'].queryset.filter(id=self.request.user.id)
         return form
 
     def get_context_data(self, **kwargs):
@@ -524,6 +523,6 @@ class GenerateDailyReportView(LoginRequiredMixin, TemplateView):
 
 class Update_products(LoginRequiredMixin, UpdateView):
     model = Product
-    fields = ['name', 'price', 'stock']
+    fields = ['price', 'stock']
     template_name = 'web/UpdateProducts.html'
     success_url = reverse_lazy("home")
