@@ -612,12 +612,17 @@ function filterByClient(clientName) {
     // Remove active state from "Mostrar Todo" button
     document.querySelector('.filter-btn').classList.remove('active');
     
-    // Show only sales table
-    document.querySelector('.table-container:first-child').style.display = 'none'; // Hide products
-    document.querySelector('.table-container:last-child').style.display = 'block'; // Show sales
+    // Get both table containers by their position in the row
+    const allContainers = document.querySelectorAll('.col-lg-6 .table-container');
+    const productsContainer = allContainers[0];
+    const salesContainer = allContainers[1];
+    
+    // Hide products, show sales
+    productsContainer.parentElement.style.display = 'none';
+    salesContainer.parentElement.style.display = 'block';
     
     // Filter sales by client name
-    const salesRows = document.querySelectorAll('.table-container:last-child tbody tr');
+    const salesRows = salesContainer.querySelectorAll('tbody tr');
     
     salesRows.forEach(row => {
         const clientCell = row.cells[1]; // Client name is in second column
@@ -626,7 +631,8 @@ function filterByClient(clientName) {
             const searchText = clientName.toLowerCase();
             
             if (clientText.includes(searchText)) {
-                row.style.display = '';
+                row.classList.remove('hidden-rows');
+                row.style.display = 'table-row';
             } else {
                 row.style.display = 'none';
             }
