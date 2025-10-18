@@ -48,12 +48,12 @@ class CreateSaleView(LoginRequiredMixin, CreateView):
         else:
             context['formset'] = SaleProductFormSet(queryset=SaleProduct.objects.none())
 
-        #user_products = Product.objects.filter(empresa=self.request.user)
+        user_products = Product.objects.filter(empresa=self.request.user)
 
-        #for form in context['formset']:
-        #    form.fields['product'].queryset = user_products
+        for form in context['formset']:
+            form.fields['product'].queryset = user_products
 
-        context['products'] = Product.objects.filter(empresa=self.request.user)
+        context['products'] = user_products
         return context
 
     def form_valid(self, form):
