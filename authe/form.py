@@ -83,10 +83,12 @@ class SaleForm(forms.ModelForm):
         })
     )
     porcentage_discount = forms.IntegerField(
-        required=True,
+        required=False,
+        initial=0,
         widget=forms.NumberInput(attrs={
             'class': 'sale-discount-input',
-            'placeholder': 'Descuento (%)'
+            'placeholder': 'Descuento (%)',
+            'value': '0'
         })
     )
     class Meta:

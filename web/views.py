@@ -38,6 +38,7 @@ class CreateSaleView(LoginRequiredMixin, CreateView):
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.fields['enterprise'].queryset = form.fields['enterprise'].queryset.filter(id=self.request.user.id)
+        #form.fields[''].queryset = form.fields['enterprise'].queryset.filter(id=self.request.user.id)
         return form
 
     def get_context_data(self, **kwargs):
@@ -45,10 +46,13 @@ class CreateSaleView(LoginRequiredMixin, CreateView):
         if self.request.POST:
             context['formset'] = SaleProductFormSet(self.request.POST)
         else:
-            # Crear formset vacío para que el usuario pueda agregar productos dinámicamente
             context['formset'] = SaleProductFormSet(queryset=SaleProduct.objects.none())
-        
-        # Agregar productos disponibles para el template
+
+        #user_products = Product.objects.filter(empresa=self.request.user)
+
+        #for form in context['formset']:
+        #    form.fields['product'].queryset = user_products
+
         context['products'] = Product.objects.filter(empresa=self.request.user)
         return context
 
@@ -83,7 +87,6 @@ class CreateSaleView(LoginRequiredMixin, CreateView):
                         total_venta += subtotal
                         product.stock -= quantity
                         product.save()
-            # Asignar el total calculado
             self.object.total = total_venta - (total_venta * porcentage_discount / 100)
             self.object.save()
             formset.instance = self.object
@@ -125,10 +128,8 @@ class MyaccountView(LoginRequiredMixin, TemplateView):
 
 class GeneratePDFView(LoginRequiredMixin, TemplateView):
     def post(self, request, *args, **kwargs):
-        # Obtener el ID de la venta desde el formulario
         sale_id = request.POST.get('sale_id')
         if not sale_id:
-            # Si no se especifica una venta, usar la primera venta del usuario
             sale = Sale.objects.filter(enterprise=self.request.user).first()
         else:
             sale = Sale.objects.filter(id_venta=sale_id, enterprise=self.request.user).first()
@@ -140,15 +141,12 @@ class GeneratePDFView(LoginRequiredMixin, TemplateView):
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="ticket_venta_{self.request.user}_{sale_id}.pdf"'
         
-        # Crear el documento PDF
         doc = SimpleDocTemplate(response, pagesize=A4, 
                               rightMargin=72, leftMargin=72, 
                               topMargin=72, bottomMargin=18)
         
-        # Obtener estilos
         styles = getSampleStyleSheet()
         
-        # Crear estilos personalizados
         title_style = ParagraphStyle(
             'CustomTitle',
             parent=styles['Heading1'],
@@ -175,50 +173,42 @@ class GeneratePDFView(LoginRequiredMixin, TemplateView):
             alignment=TA_LEFT,
             textColor=colors.black
         )
-        
-        # Obtener datos de la empresa
+
         company = sale.enterprise
-        
-        # Construir el contenido del PDF
+
         story = []
-        
-        # Título del ticket
+
         story.append(Paragraph("TICKET DE COMPRA", title_style))
         story.append(Spacer(1, 20))
         
-        # Información de la empresa
         story.append(Paragraph(f"<b>{company.username}</b>", company_style))
         story.append(Paragraph(f"Email: {company.email}", info_style))
         story.append(Spacer(1, 20))
         
-        # Línea separadora
         story.append(Paragraph("_" * 50, info_style))
         story.append(Spacer(1, 20))
         
-        # Información de la venta
         story.append(Paragraph(f"<b>Número de Ticket:</b> {sale.id_venta}", info_style))
         story.append(Paragraph(f"<b>Cliente:</b> {sale.name}", info_style))
         story.append(Paragraph(f"<b>Fecha:</b> {sale.date.strftime('%d/%m/%Y %H:%M')}", info_style))
+        story.append(Paragraph(f"<b>Descuento:</b> {sale.porcentage_discount}%", info_style))
         story.append(Paragraph(f"TICKET NO VALIDO COMO FACTURA.", info_style))
         story.append(Spacer(1, 20))
         
-        # Tabla de productos
         story.append(Paragraph("<b>DETALLE DE PRODUCTOS</b>", info_style))
         story.append(Spacer(1, 10))
-        
-        # Crear datos para la tabla
-        table_data = [['Producto', 'Categoría', 'Precio Unit.', 'Cantidad', 'Subtotal']]
-        
-        total_venta = 0
+
+        table_data = [['Producto', 'Categoría', 'Precio Unit.', 'Cant.', 'Subtotal']]
+
+        total_sin_descuento = 0
         for sale_product in sale.saleproduct_set.all():
             product = sale_product.product
             quantity = sale_product.quantity
-            
-            # Verificar que el producto existe y tiene precio
+
             if product and product.price is not None:
                 subtotal = float(product.price) * quantity
-                total_venta += subtotal
-                
+                total_sin_descuento += subtotal
+
                 table_data.append([
                     product.name,
                     product.category,
@@ -226,8 +216,7 @@ class GeneratePDFView(LoginRequiredMixin, TemplateView):
                     str(quantity),
                     f"${subtotal:.2f}"
                 ])
-        
-        # Crear la tabla
+
         table = Table(table_data, colWidths=[2*inch, 1.5*inch, 1*inch, 0.8*inch, 1*inch])
         table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), colors.white),
@@ -243,12 +232,34 @@ class GeneratePDFView(LoginRequiredMixin, TemplateView):
         
         story.append(table)
         story.append(Spacer(1, 20))
-        
+
+        # Cálculos del total
+        monto_descuento = total_sin_descuento * sale.porcentage_discount / 100
+        total_final = total_sin_descuento - monto_descuento
+
         # Total
         story.append(Paragraph("_" * 50, info_style))
         story.append(Spacer(1, 10))
-        story.append(Paragraph(f"<b>TOTAL: ${total_venta:.2f}</b>", 
-                              ParagraphStyle('TotalStyle', parent=info_style, 
+
+        # Mostrar subtotal
+        story.append(Paragraph(f"<b>Subtotal:</b> ${total_sin_descuento:.2f}",
+                              ParagraphStyle('SubtotalStyle', parent=info_style,
+                                            fontSize=12, alignment=TA_RIGHT)))
+
+        # Mostrar descuento si existe
+        if sale.porcentage_discount > 0:
+            story.append(Paragraph(f"<b>Descuento ({sale.porcentage_discount}%):</b> -${monto_descuento:.2f}",
+                                  ParagraphStyle('DiscountStyle', parent=info_style,
+                                                fontSize=12, alignment=TA_RIGHT,
+                                                textColor=colors.red)))
+
+        story.append(Spacer(1, 5))
+        story.append(Paragraph("_" * 50, info_style))
+        story.append(Spacer(1, 5))
+
+        # Total final
+        story.append(Paragraph(f"<b>TOTAL: ${total_final:.2f}</b>",
+                              ParagraphStyle('TotalStyle', parent=info_style,
                                             fontSize=14, alignment=TA_RIGHT)))
         story.append(Spacer(1, 30))
         
@@ -261,8 +272,7 @@ class GeneratePDFView(LoginRequiredMixin, TemplateView):
         story.append(Paragraph(f"Ticket generado el: {datetime.now().strftime('%d/%m/%Y %H:%M')}", 
                               ParagraphStyle('DateStyle', parent=info_style, 
                                             alignment=TA_CENTER, fontSize=10)))
-        
-        # Construir el PDF
+
         doc.build(story)
         
         return response
@@ -281,7 +291,6 @@ class TotalSaleDayView(LoginRequiredMixin, TemplateView):
         from datetime import date
         today = date.today()
 
-        # Filtrar ventas solo del día de hoy
         sales = Sale.objects.filter(enterprise=self.request.user, date__date=today)
         total_sales = sum(sale.total for sale in sales)
 
@@ -298,13 +307,11 @@ class EstadisticsView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         sales = Sale.objects.filter(enterprise=self.request.user)
         products = Product.objects.filter(empresa=self.request.user)
-        
-        # Datos para estadísticas generales
+
         total_sales = sum(sale.total for sale in sales)
         total_orders = sales.count()
         avg_order = total_sales / total_orders if total_orders > 0 else 0
-        
-        # Datos para gráfico de ventas por mes
+
         from datetime import datetime
         from collections import defaultdict
         
@@ -312,8 +319,7 @@ class EstadisticsView(LoginRequiredMixin, TemplateView):
         for sale in sales:
             month_key = sale.date.strftime('%Y-%m')
             sales_by_month[month_key] += float(sale.total)
-        
-        # Generar datos para los últimos 12 meses
+
         import calendar
         from datetime import date, timedelta
         
@@ -326,16 +332,14 @@ class EstadisticsView(LoginRequiredMixin, TemplateView):
             month_name = calendar.month_name[target_date.month]
             months_data.append(month_name)
             sales_data.append(float(sales_by_month.get(month_key, 0)))
-        
-        # Datos para productos más vendidos
+
         from collections import Counter
         
         product_sales = Counter()
         for sale in sales:
             for sale_product in sale.saleproduct_set.all():
                 product_sales[sale_product.product.name] += sale_product.quantity
-        
-        # Top 5 productos más vendidos
+
         top_products = product_sales.most_common(5)
         product_names = [item[0] for item in top_products]
         product_quantities = [item[1] for item in top_products]
@@ -361,25 +365,19 @@ class GenerateDailyReportView(LoginRequiredMixin, TemplateView):
 
         today = date.today()
 
-        # Filtrar ventas del día de hoy
         today_sales = Sale.objects.filter(enterprise=self.request.user, date__date=today)
 
-        # Calcular el total del día
         total_day = sum(sale.total for sale in today_sales)
 
-        # Crear respuesta HTTP para el PDF
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="cierre_diario_{today.strftime("%d_%m_%Y")}.pdf"'
 
-        # Crear el documento PDF
         doc = SimpleDocTemplate(response, pagesize=A4,
                               rightMargin=72, leftMargin=72,
                               topMargin=72, bottomMargin=18)
 
-        # Obtener estilos
         styles = getSampleStyleSheet()
 
-        # Crear estilos personalizados
         title_style = ParagraphStyle(
             'CustomTitle',
             parent=styles['Heading1'],
@@ -418,33 +416,26 @@ class GenerateDailyReportView(LoginRequiredMixin, TemplateView):
             fontName='Helvetica-Bold'
         )
 
-        # Obtener datos de la empresa
         company = self.request.user
 
-        # Construir el contenido del PDF
         story = []
 
-        # Título del reporte
         story.append(Paragraph("CIERRE DEL DÍA", title_style))
         story.append(Spacer(1, 20))
 
-        # Información de la empresa
         story.append(Paragraph(f"<b>{company.username}</b>", company_style))
         story.append(Paragraph(f"Email: {company.email}", info_style))
         story.append(Spacer(1, 20))
 
-        # Línea separadora
         story.append(Paragraph("=" * 80, info_style))
         story.append(Spacer(1, 20))
 
-        # Fecha del cierre
         story.append(Paragraph(f"<b>Fecha:</b> {today.strftime('%d/%m/%Y')}",
                               ParagraphStyle('DateStyle', parent=info_style, fontSize=14)))
         story.append(Paragraph(f"<b>Número de ventas:</b> {today_sales.count()}",
                               ParagraphStyle('CountStyle', parent=info_style, fontSize=14)))
         story.append(Spacer(1, 30))
 
-        # Total del día (destacado)
         story.append(Paragraph("TOTAL DEL DÍA",
                               ParagraphStyle('TotalLabel', parent=info_style,
                                            fontSize=16, alignment=TA_CENTER,
@@ -453,7 +444,6 @@ class GenerateDailyReportView(LoginRequiredMixin, TemplateView):
         story.append(Paragraph(f"${total_day:.2f}", total_style))
         story.append(Spacer(1, 30))
 
-        # Tabla de ventas del día
         if today_sales.exists():
             story.append(Paragraph("=" * 80, info_style))
             story.append(Spacer(1, 20))
@@ -462,7 +452,6 @@ class GenerateDailyReportView(LoginRequiredMixin, TemplateView):
                                                fontSize=14, alignment=TA_CENTER)))
             story.append(Spacer(1, 15))
 
-            # Crear datos para la tabla
             table_data = [['ID', 'Cliente', 'Hora', 'Total']]
 
             for sale in today_sales:
@@ -473,7 +462,6 @@ class GenerateDailyReportView(LoginRequiredMixin, TemplateView):
                     f"${sale.total:.2f}"
                 ])
 
-            # Crear la tabla
             table = Table(table_data, colWidths=[1*inch, 3*inch, 1.5*inch, 1.5*inch])
             table.setStyle(TableStyle([
                 ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#667eea')),
@@ -500,11 +488,9 @@ class GenerateDailyReportView(LoginRequiredMixin, TemplateView):
                                                textColor=colors.HexColor('#6c757d'))))
             story.append(Spacer(1, 30))
 
-        # Línea separadora final
         story.append(Paragraph("=" * 80, info_style))
         story.append(Spacer(1, 20))
 
-        # Pie del reporte
         story.append(Paragraph(f"Reporte generado el: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}",
                               ParagraphStyle('FooterStyle', parent=info_style,
                                            alignment=TA_CENTER, fontSize=10,
@@ -515,7 +501,6 @@ class GenerateDailyReportView(LoginRequiredMixin, TemplateView):
                                            alignment=TA_CENTER, fontSize=10,
                                            textColor=colors.HexColor('#6c757d'))))
 
-        # Construir el PDF
         doc.build(story)
 
         return response

@@ -203,7 +203,7 @@
       margin-bottom: 20px;
     }
 
-    #porcentage-discount {
+    .sale-discount-input {
       width: 100%;
       padding: 15px;
       border: 2px solid #e0e0e0;
@@ -214,11 +214,11 @@
       outline: none;
     }
 
-    #porcentage-discount:focus {
+    .sale-discount-input:focus {
       border-color: #333;
     }
 
-    #porcentage-discount::placeholder {
+    .sale-discount-input::placeholder {
       color: #999;
     }
 
@@ -362,7 +362,7 @@
 
       <!-- Porcentaje de descuento -->
       <div class="discount-section">
-        <input type="number" id="porcentage-discount" name="porcentage_discount" placeholder="Porcentaje de descuento (%)">
+        {{ form.porcentage_discount }}
       </div>
 
       <!-- Total -->
@@ -396,7 +396,7 @@
     function calculateTotal() {
       let total = 0;
       const productRows = document.querySelectorAll('.product-row');
-      const porcentageDiscountInput = document.getElementById('porcentage-discount');
+      const porcentageDiscountInput = document.querySelector('.sale-discount-input') || document.getElementById('id_porcentage_discount');
       const porcentageDiscount = parseFloat(porcentageDiscountInput.value) || 0;
       
       // Validar que el porcentaje esté entre 0 y 100
@@ -435,16 +435,18 @@
     document.addEventListener('DOMContentLoaded', function() {
       // Usar delegación de eventos para manejar elementos dinámicos
       document.addEventListener('input', function(event) {
-        if (event.target.classList.contains('sale-quantity-input') || 
-            event.target.id === 'porcentage-discount') {
+        if (event.target.classList.contains('sale-quantity-input') ||
+            event.target.classList.contains('sale-discount-input') ||
+            event.target.id === 'id_porcentage_discount') {
           calculateTotal();
         }
       });
-      
+
       document.addEventListener('change', function(event) {
-        if (event.target.classList.contains('sale-product-select') || 
+        if (event.target.classList.contains('sale-product-select') ||
             event.target.classList.contains('sale-quantity-input') ||
-            event.target.id === 'porcentage-discount') {
+            event.target.classList.contains('sale-discount-input') ||
+            event.target.id === 'id_porcentage_discount') {
           calculateTotal();
         }
       });

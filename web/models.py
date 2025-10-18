@@ -10,14 +10,14 @@ class Product(models.Model):
     empresa = models.ForeignKey(Company, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.name} -{self.price}"
+        return f"{self.name} - {self.price}"
 
 class Sale(models.Model):
     id_venta = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     date = models.DateTimeField(auto_now_add=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    porcentage_discount = models.IntegerField()
+    porcentage_discount = models.IntegerField(default=0)
     enterprise = models.ForeignKey(Company, on_delete=models.CASCADE)
 
     def __str__(self):
