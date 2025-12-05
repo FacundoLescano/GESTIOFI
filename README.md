@@ -2,6 +2,11 @@
 
 Sistema integral de gestión de ventas desarrollado con Django, diseñado para pequeñas y medianas empresas que necesitan llevar un control detallado de sus productos, ventas y reportes financieros.
 
+![WhatsApp Image 2025-10-11 at 11 37 24_4ef5e809](https://github.com/user-attachments/assets/c175d6c8-d9b5-48fa-83d5-92ad13c9430c)
+![WhatsApp Image 2025-10-11 at 11 37 08_e8a9d8b4](https://github.com/user-attachments/assets/5c7200fb-0b0d-479d-a1b7-a3111a997ad2)
+![WhatsApp Image 2025-10-11 at 11 38 03_887f7164](https://github.com/user-attachments/assets/f8b785bf-6c09-4864-b5a7-0a664adc1f96)
+
+
 ## 📋 Características Principales
 
 - **Gestión de Productos**: Crear, actualizar y eliminar productos con control de stock automático
